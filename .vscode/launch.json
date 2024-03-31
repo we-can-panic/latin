@@ -1,0 +1,12 @@
+{
+  "configurations": [
+    {
+      "name": "debug build",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define=FLAVOR=dev"
+      ]
+    },
+  ]
+}

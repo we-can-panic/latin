@@ -1,0 +1,410 @@
+[
+  {
+    "la": "Patella",
+    "en": "Plate",
+    "type": "noun",
+    "num": "1",
+    "sex": "f",
+    "idx": 1
+  },
+  {
+    "la": "Fartus",
+    "en": "Stuff",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 2
+  },
+  {
+    "la": "Farta",
+    "en": "Stuff",
+    "type": "noun",
+    "num": "1",
+    "sex": "f",
+    "idx": 3
+  },
+  {
+    "la": "Caupona",
+    "en": "Inn",
+    "type": "noun",
+    "num": "1",
+    "sex": "f",
+    "idx": 4
+  },
+  {
+    "la": "laeta",
+    "en": "Happy",
+    "type": "adjective",
+    "num": "1",
+    "sex": "f",
+    "idx": 5
+  },
+  {
+    "la": "Otiosus",
+    "en": "Lazy",
+    "type": "adjective",
+    "num": "2",
+    "sex": "m",
+    "idx": 6
+  },
+  {
+    "la": "Placida",
+    "en": "Calm",
+    "type": "adjective",
+    "num": "1",
+    "sex": "f",
+    "idx": 7
+  },
+  {
+    "la": "Pomum",
+    "en": "Apple",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 8
+  },
+  {
+    "la": "Ientaculum",
+    "en": "Breakfast",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 9
+  },
+  {
+    "la": "Canis",
+    "en": "Dog",
+    "type": "noun",
+    "num": "3",
+    "sex": "m",
+    "idx": 10
+  },
+  {
+    "la": "Stultus",
+    "en": "Stupid",
+    "type": "adjective",
+    "num": "2",
+    "sex": "m",
+    "idx": 11
+  },
+  {
+    "la": "Nomen",
+    "en": "Name",
+    "type": "noun",
+    "num": "3",
+    "sex": "n",
+    "idx": 12
+  },
+  {
+    "la": "Dubius",
+    "en": "Doubt",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 13
+  },
+  {
+    "la": "Balneum",
+    "en": "Bath",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 14
+  },
+  {
+    "la": "Imber",
+    "en": "Rain",
+    "type": "noun",
+    "num": "3i",
+    "sex": "m",
+    "idx": 15
+  },
+  {
+    "la": "Labrum",
+    "en": "Lip",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 16
+  },
+  {
+    "la": "Feles",
+    "en": "Cat",
+    "type": "noun",
+    "num": "3i",
+    "sex": "m",
+    "idx": 17
+  },
+  {
+    "la": "Homo",
+    "en": "Human",
+    "type": "noun",
+    "num": "3",
+    "sex": "m",
+    "idx": 18
+  },
+  {
+    "la": "Ignis",
+    "en": "Fire",
+    "type": "noun",
+    "num": "3i",
+    "sex": "m",
+    "idx": 19
+  },
+  {
+    "la": "Animal",
+    "en": "Animal",
+    "type": "noun",
+    "num": "3i",
+    "sex": "n",
+    "idx": 20
+  },
+  {
+    "la": "Genus",
+    "en": "Kind",
+    "type": "noun",
+    "num": "3",
+    "sex": "n",
+    "idx": 21
+  },
+  {
+    "la": "Mare",
+    "en": "Sea",
+    "type": "noun",
+    "num": "3i",
+    "sex": "n",
+    "idx": 22
+  },
+  {
+    "la": "Panis",
+    "en": "Bread",
+    "type": "noun",
+    "num": "3i",
+    "sex": "m",
+    "idx": 23
+  },
+  {
+    "la": "Rosa",
+    "en": "Rose",
+    "type": "noun",
+    "num": "1",
+    "sex": "f",
+    "idx": 24
+  },
+  {
+    "la": "Puella",
+    "en": "Girl",
+    "type": "noun",
+    "num": "1",
+    "sex": "f",
+    "idx": 25
+  },
+  {
+    "la": "Sapientia",
+    "en": "Sapience",
+    "type": "noun",
+    "num": "1",
+    "sex": "f",
+    "idx": 26
+  },
+  {
+    "la": "Fama",
+    "en": "Report",
+    "type": "noun",
+    "num": "1",
+    "sex": "f",
+    "idx": 27
+  },
+  {
+    "la": "Aquila",
+    "en": "Eagle",
+    "type": "noun",
+    "num": "1",
+    "sex": "f",
+    "idx": 28
+  },
+  {
+    "la": "Bestia",
+    "en": "Beast",
+    "type": "noun",
+    "num": "1",
+    "sex": "f",
+    "idx": 29
+  },
+  {
+    "la": "Musca",
+    "en": "Fly",
+    "type": "noun",
+    "num": "1",
+    "sex": "f",
+    "idx": 30
+  },
+  {
+    "la": "Amicus",
+    "en": "Friend",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 31
+  },
+  {
+    "la": "Verbum",
+    "en": "Verb",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 32
+  },
+  {
+    "la": "Animus",
+    "en": "Soul",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 33
+  },
+  {
+    "la": "Campus",
+    "en": "Campus",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 34
+  },
+  {
+    "la": "Medicus",
+    "en": "Doctor",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 35
+  },
+  {
+    "la": "Locus",
+    "en": "Location",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 36
+  },
+  {
+    "la": "Morbus",
+    "en": "Disease",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 37
+  },
+  {
+    "la": "Vinum",
+    "en": "Wine",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 38
+  },
+  {
+    "la": "Aurum",
+    "en": "Gold",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 39
+  },
+  {
+    "la": "Oppidum",
+    "en": "Town",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 40
+  },
+  {
+    "la": "Templum",
+    "en": "Temple",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 41
+  },
+  {
+    "la": "Donum",
+    "en": "Gift",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 42
+  },
+  {
+    "la": "Ingenium",
+    "en": "Genius",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 43
+  },
+  {
+    "la": "Periculum",
+    "en": "Danger",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 44
+  },
+  {
+    "la": "Signum",
+    "en": "Sign",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 45
+  },
+  {
+    "la": "Exemplum",
+    "en": "Example",
+    "type": "noun",
+    "num": "2",
+    "sex": "n",
+    "idx": 46
+  },
+  {
+    "la": "Liber",
+    "en": "Book",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 47
+  },
+  {
+    "la": "Puer",
+    "en": "Boy",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 48
+  },
+  {
+    "la": "Ager",
+    "en": "Field",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 49
+  },
+  {
+    "la": "Deus",
+    "en": "God",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 50
+  },
+  {
+    "la": "Asinus",
+    "en": "Donky",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 51
+  }
+]
