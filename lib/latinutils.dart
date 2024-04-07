@@ -254,15 +254,17 @@ String getNounConjugate(
         };
         return stem + map[m]![w]!;
       }
-    case '3': // homō. leō, lex, genus, caput, nomen
+    case '3': // homō. leō, lex, genus, caput, nomen, canis
       if (w == NounConjugateType.nom && m == MultiType.single) {
         return word.la;
       }
-      // 男性か女性ならhomō, leō, lex
+      // 男性か女性ならhomō, leō, lex, canis
       if (s == SexType.f || s == SexType.m) {
         String stem = "";
-        // 末尾がxならlex
-        if (word.la[word.la.length - 1] == "x") {
+        if (word.la.endsWith("is")) {
+          stem = word.la.substring(0, word.la.length - 2);
+          // 末尾がxならlex
+        } else if (word.la[word.la.length - 1] == "x") {
           stem = "${word.la.substring(0, word.la.length - 1)}g";
           // 2番目が母音ならleo
         } else if ("aiueoāīūēō".contains(word.la[word.la.length - 2])) {
