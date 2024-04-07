@@ -12,20 +12,35 @@ List<dynamic> sentenceScoreData = [];
 // App関数
 
 int currentIdx = 0;
+const List<String> numList = ["1", "2", "3", "3i"];
+List<String> currentNumList = numList;
+List<Word> currentWordData = []; // Conjugateの条件のみを抜き出したwordData
 
 // 次の単語を返す
-Word getNextWord() {
-  if (wordData.isEmpty) {
+Word getNextWord({List<String> numList = const []}) {
+  // フィルタに更新があったら
+  if (numList != currentNumList) {
+    // 何か入ってたらそれに合致するwordを抜き出し
+    if (numList.isNotEmpty) {
+      currentNumList = numList;
+      currentWordData =
+          wordData.where((word) => currentNumList.contains(word.num)).toList();
+      // 空だったらすべてをwordDataに
+    } else {
+      currentWordData = wordData;
+    }
+  }
+  if (currentWordData.isEmpty) {
     return Word(
         la: "", en: "", type: WordType.noun, num: "", sex: SexType.m, idx: 0);
   }
-  if (currentIdx < wordData.length) {
-    Word result = wordData[currentIdx];
+  if (currentIdx < currentWordData.length) {
+    Word result = currentWordData[currentIdx];
     currentIdx++;
     return result;
   } else {
     currentIdx = 0;
-    return getNextWord();
+    return getNextWord(numList: numList);
   }
 }
 
