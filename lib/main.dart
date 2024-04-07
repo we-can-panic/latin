@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import "latinutils.dart";
@@ -59,6 +60,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // TODO: 以下変数を使う
+  String conjugateNumType = '全て'; // 初期選択項目を実装
+  List<String> conjugateNumTypeList = ['全て', '1, 2', '3', '3, 3i']; // 選択肢のリスト
+
+  int conjugateQuestionNum = 5;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,6 +76,44 @@ class _HomeState extends State<Home> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 200.0,
+                  //   child: CupertinoPicker(
+                  //     itemExtent: 32.0,
+                  //     onSelectedItemChanged: (int index) {
+                  //       setState(() {
+                  //         conjugateNumType = conjugateNumTypeList[index];
+                  //         print("called");
+                  //       });
+                  //     },
+                  //     children: conjugateNumTypeList.map((String item) {
+                  //       print(item + " created");
+                  //       return Text(item);
+                  //     }).toList(),
+                  //     // children: [Text("hhh"), Text("hhj")],
+                  //   ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ConjugateQuestion(
+                                title: "活用テスト",
+                                numList: ["3", "3i"],
+                                questionNum: 5)),
+                      );
+                    },
+                    child: const Text('活用テスト(3/3iのみ)'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 50.0,
+            ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               ElevatedButton(
                 onPressed: () {
@@ -114,18 +159,29 @@ class _HomeState extends State<Home> {
 // ---
 
 class ConjugateQuestion extends StatefulWidget {
-  const ConjugateQuestion({super.key, required this.title});
+  const ConjugateQuestion(
+      {super.key,
+      required this.title,
+      this.numList = const [],
+      this.questionNum = 15});
 
   final String title;
+  final List<String> numList;
+  final int questionNum;
 
   @override
-  State<ConjugateQuestion> createState() => _ConjugateQuestionState();
+  State<ConjugateQuestion> createState() =>
+      _ConjugateQuestionState(numList, questionNum);
 }
 
 class _ConjugateQuestionState extends State<ConjugateQuestion> {
+  List<String> numList;
+  int questionNum; // TODO: questionNumの使用
+  _ConjugateQuestionState(this.numList, this.questionNum);
+
   @override
   Widget build(BuildContext context) {
-    Word word = getNextWord();
+    Word word = getNextWord(numList: numList);
     NounConjugateType con = getRandomNounConjugateType();
     MultiType mt = getRandomMultiType();
     SexType st = word.sex;
@@ -182,7 +238,7 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
               const SizedBox(width: 20),
               stringToIcon("格変化：${word.num}", style: StyleType.info),
               const SizedBox(width: 20),
-              stringToIcon("$currentIdx/${wordData.length}",
+              stringToIcon("$currentIdx/${currentWordData.length}",
                   style: StyleType.info),
             ]),
             const SizedBox(height: 20),
@@ -366,6 +422,7 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                     children: List.generate(
                       words.length,
                       (index) => ElevatedButton(
+                          // TODO: answeredのボタンごとの個別化
                           onPressed: () {
                             answered = true;
                             if (words[index] == correctWord) {
