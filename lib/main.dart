@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:latin/pages/sentenceQuestionPage.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +23,11 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (context) => Counter(),
         child: MaterialApp(
-          // theme: ThemeData.dark(),
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-            fontFamily: "Monospace, メイリオ",
-          ),
+          theme: ThemeData.dark(),
+          // theme: ThemeData(
+          //   primarySwatch: Colors.blue,
+          //   fontFamily: "Monospace, メイリオ",
+          // ),
           home: const Home(title: 'おかたがかゆかゆキングダム'),
         ));
   }

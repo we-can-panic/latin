@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:latin/utils/latinutils.dart';
 
 enum StyleType { vivid, normal, info }
 
