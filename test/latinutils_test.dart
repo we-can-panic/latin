@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:latin/latinutils.dart';
+import 'package:latin/utils/latinutils.dart';
 
 void main() async {
   // await init();
