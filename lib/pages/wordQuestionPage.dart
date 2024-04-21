@@ -1,26 +1,40 @@
 import 'package:flutter/material.dart';
 import "../utils/latinutils.dart";
 import "../utils/flutterutils.dart";
+import "../logics/wordLogic.dart";
 
 Column wordStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-    SizedBox(height: 50),
+    ElevatedButton(
+        onPressed: () async {
+          List<String> tmpTagData = List.from(tagData.values);
+          tmpTagData.add("タグなし");
+          currentTagData =
+              await selectItems(context, tmpTagData, currentTagData, "タグ絞り込み");
+        },
+        child: Text("タグ絞り込み")),
     SizedBox(height: 20),
     ElevatedButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const WordQuestion(title: "単語テスト")),
-        );
+        bool result = resetCurrentWordData();
+        if (!result) {
+          showAlertDialog(context, "エラー!", "条件に合うワードはありません。絞り込みの設定を見直してみてください");
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const WordQuestion(title: "活用テスト")),
+          );
+        }
       },
-      child: const Text('単語テスト'),
-    )
+      child: const Text('活用テスト'),
+    ),
   ]);
 }
 
 class WordQuestion extends StatefulWidget {
   const WordQuestion({super.key, required this.title});
+
   final String title;
 
   @override
@@ -28,71 +42,93 @@ class WordQuestion extends StatefulWidget {
 }
 
 class _WordQuestionState extends State<WordQuestion> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  _WordQuestionState();
 
   @override
   Widget build(BuildContext context) {
+    Word word = getNextWord();
+    bool answered = false;
+    List<Word> candidateWords = getRandomWords();
+    if (!candidateWords.map((item) => item.en).contains(word.en)) {
+      candidateWords[0] = word;
+      candidateWords.shuffle();
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ポップなエフェクト'),
+        title: Text(widget.title),
       ),
-      body: const Center(
-        child: PopEffect(),
-      ),
-    );
-  }
-}
-
-class PopEffect extends StatefulWidget {
-  const PopEffect({super.key});
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _PopEffectState createState() => _PopEffectState();
-}
-
-class _PopEffectState extends State<PopEffect>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _opacityAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-        duration: const Duration(milliseconds: 500), vsync: this);
-    _scaleAnimation = Tween<double>(begin: 0, end: 1).animate(
-        CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
-    _opacityAnimation = Tween<double>(begin: 0, end: 1)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    _controller.forward();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _scaleAnimation,
-      child: FadeTransition(
-        opacity: _opacityAnimation,
-        child: const Text(
-          '正解',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(30),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
+                  width: 3,
+                ),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.lightGreen,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    toQuestion(word),
+                    style: const TextStyle(
+                      fontSize: 48,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            stringToIcon("$currentIdx/${currentWordData.length}",
+                style: StyleType.info),
+            const SizedBox(height: 20),
+            SingleChildScrollView(
+                child: Center(
+                    child: Wrap(
+                        spacing: 8.0, // ボタン間のスペース
+                        runSpacing: 8.0, // 行間のスペース
+                        children: List.generate(
+                          candidateWords.length,
+                          (index) => ElevatedButton(
+                              // TODO: answeredのボタンごとの個別化
+                              onPressed: () {
+                                answered = true;
+                                if (candidateWords[index].en == word.en) {
+                                  Future.delayed(
+                                      const Duration(milliseconds: 500), () {
+                                    setState(() {});
+                                  });
+                                }
+                              },
+                              style: ButtonStyle(backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                      (states) {
+                                if (!answered) {
+                                  return Colors.white70;
+                                } else if (candidateWords[index].en ==
+                                    word.en) {
+                                  // 正解の場合は薄緑色の背景に緑の枠を適用
+                                  return Colors.lightGreenAccent;
+                                  // 不正解のボタンを選んでいたら灰色
+                                } else {
+                                  return Colors.grey.shade700;
+                                }
+                              })),
+                              child: Text(toAnswer(candidateWords[index]),
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18))),
+                        )))),
+          ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }
