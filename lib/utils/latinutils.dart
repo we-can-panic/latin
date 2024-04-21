@@ -29,10 +29,14 @@ List<String> getRandomConjugated(Word word, SexType s, {int size = 5}) {
   List<String> allCandidate = [];
   for (var m in MultiType.values) {
     for (var c in NounConjugateType.values) {
+      if (m == MultiType.single && c == NounConjugateType.nom) {
+        continue;
+      }
       allCandidate.add(getNounConjugate(word, c, m, s));
     }
   }
 
+  allCandidate = allCandidate.toSet().toList();
   allCandidate.shuffle();
 
   return allCandidate.sublist(0, size);
