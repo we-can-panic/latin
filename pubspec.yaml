@@ -67,9 +67,10 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/word.json
-    - assets/word_score.json
+    - assets/word_meta.json
     - assets/sentence.json
-    - assets/sentence_score.json
+    - assets/sentence_meta.json
+    - assets/tags.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
