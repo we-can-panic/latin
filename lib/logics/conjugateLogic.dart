@@ -10,6 +10,7 @@ List<String> currentNumData = numList;
 bool resetCurrentWordData() {
   currentIdx = 0;
   currentWordData = filterWordData(wordData, currentTagData, currentNumData);
+  currentWordData.shuffle();
   // 整合性: currentWordDataが0でないこと
   return currentWordData.isNotEmpty;
 }

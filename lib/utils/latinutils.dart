@@ -33,6 +33,7 @@ List<String> getRandomConjugated(Word word, SexType s, {int size = 5}) {
     }
   }
 
+  allCandidate = allCandidate.toSet().toList();
   allCandidate.shuffle();
 
   return allCandidate.sublist(0, size);
