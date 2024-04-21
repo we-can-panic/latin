@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import "../latinutils.dart";
-import "../flutterutils.dart";
+import "../utils/latinutils.dart";
+import "../utils/flutterutils.dart";
 
 Column sentenceStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [

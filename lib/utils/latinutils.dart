@@ -6,44 +6,22 @@ import 'package:flutter/services.dart' show rootBundle;
 
 List<Word> wordData = [];
 List<dynamic> sentenceData = [];
-List<dynamic> wordMetaData = [];
+List<WordMeta> wordMetaData = [];
 List<dynamic> sentenceMetaData = [];
 Map<int, String> tagData = {};
+
+const List<String> numList = ["1", "2", "3", "3i"];
 
 // --
 // App関数
 
-int currentIdx = 0;
-const List<String> numList = ["1", "2", "3", "3i"];
-List<String> currentNumList = numList;
-List<Word> currentWordData = []; // Conjugateの条件のみを抜き出したwordData
-
-// 次の単語を返す
-Word getNextWord({List<String> numList = const []}) {
-  // フィルタに更新があったら
-  if (numList != currentNumList) {
-    // 何か入ってたらそれに合致するwordを抜き出し
-    if (numList.isNotEmpty) {
-      currentNumList = numList;
-      currentWordData =
-          wordData.where((word) => currentNumList.contains(word.num)).toList();
-      // 空だったらすべてをwordDataに
-    } else {
-      currentWordData = wordData;
+List<String> getTag(Word word) {
+  for (var m in wordMetaData) {
+    if (m.wordIdx == word.idx) {
+      return m.tags;
     }
   }
-  if (currentWordData.isEmpty) {
-    return Word(
-        la: "", en: "", type: WordType.noun, num: "", sex: SexType.m, idx: 0);
-  }
-  if (currentIdx < currentWordData.length) {
-    Word result = currentWordData[currentIdx];
-    currentIdx++;
-    return result;
-  } else {
-    currentIdx = 0;
-    return getNextWord(numList: numList);
-  }
+  return [];
 }
 
 // ランダムな数/格の単語をいくつか返す

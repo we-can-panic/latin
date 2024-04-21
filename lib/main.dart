@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:latin/pages/sentenceQuestion.dart';
+import 'package:latin/pages/sentenceQuestionPage.dart';
 import 'package:provider/provider.dart';
-import "latinutils.dart";
-import "flutterutils.dart";
-import "pages/conjugateQuestion.dart";
-import "pages/sentenceQuestion.dart";
-import "pages/wordQuestion.dart";
+import "utils/latinutils.dart";
+import "utils/flutterutils.dart";
+import "pages/conjugateQuestionPage.dart";
+import "pages/sentenceQuestionPage.dart";
+import "pages/wordQuestionPage.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

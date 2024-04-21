@@ -1,23 +1,36 @@
 import 'package:flutter/material.dart';
-import "../latinutils.dart";
-import "../flutterutils.dart";
+import "../utils/latinutils.dart";
+import "../utils/flutterutils.dart";
+import "../logics/conjugateLogic.dart";
 
 Column conjugateStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
     ElevatedButton(
-        onPressed: () {
-          // selectedItems = selectTag(context, conjugateNumTypeList);
-          // conjugateNumTypeList = selectedItems;
+        onPressed: () async {
+          currentTagData = await selectItems(
+              context, tagData.values.toList(), currentTagData, "タグ絞り込み");
         },
-        child: Text("絞り込み")),
+        child: Text("タグ絞り込み")),
+    SizedBox(height: 20),
+    ElevatedButton(
+        onPressed: () async {
+          currentNumData =
+              await selectItems(context, numList, currentNumData, "変化系絞り込み");
+        },
+        child: Text("変化系絞り込み")),
     SizedBox(height: 20),
     ElevatedButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const ConjugateQuestion(title: "活用テスト")),
-        );
+        bool result = resetCurrentWordData();
+        if (!result) {
+          showAlertDialog(context, "エラー!", "条件に合うワードはありません。絞り込みの設定を見直してみてください");
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ConjugateQuestion(title: "活用テスト")),
+          );
+        }
       },
       child: const Text('活用テスト'),
     ),
@@ -47,7 +60,7 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    Word word = getNextWord(numList: numList);
+    Word word = getNextWord();
     NounConjugateType con = getRandomNounConjugateType();
     MultiType mt = getRandomMultiType();
     SexType st = word.sex;
