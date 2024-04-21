@@ -70,7 +70,9 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
     List<String> words = getRandomConjugated(word, st);
     bool answered = false;
     if (!words.contains(correctWord)) {
+      words.removeAt(0);
       words.add(correctWord);
+      words.shuffle();
     }
     words.shuffle();
 
