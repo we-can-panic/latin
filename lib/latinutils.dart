@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 List<Word> wordData = [];
 List<dynamic> sentenceData = [];
-List<dynamic> wordScoreData = [];
-List<dynamic> sentenceScoreData = [];
+List<dynamic> wordMetaData = [];
+List<dynamic> sentenceMetaData = [];
+Map<int, String> tagData = {};
 
 // --
 // App関数
@@ -62,19 +64,23 @@ List<String> getRandomConjugated(Word word, SexType s, {int size = 5}) {
 Future<void> init() async {
   String wordStr = await rootBundle.loadString('assets/word.json');
   String sentenceStr = await rootBundle.loadString('assets/sentence.json');
-  String wordScoreStr = await rootBundle.loadString('assets/word_score.json');
-  String sentenceScoreStr =
-      await rootBundle.loadString('assets/sentence_score.json');
+  String wordMetaStr = await rootBundle.loadString('assets/word_meta.json');
+  String sentenceMetaStr =
+      await rootBundle.loadString('assets/sentence_meta.json');
+  String tagStr = await rootBundle.loadString("assets/tags.json");
 
   List<dynamic> word = jsonDecode(wordStr);
   List<dynamic> sentence = jsonDecode(sentenceStr);
-  List<dynamic> wordScore = jsonDecode(wordScoreStr);
-  List<dynamic> sentenceScore = jsonDecode(sentenceScoreStr);
+  List<dynamic> wordMeta = jsonDecode(wordMetaStr);
+  List<dynamic> sentenceMeta = jsonDecode(sentenceMetaStr);
+  List<dynamic> tag = jsonDecode(tagStr);
 
   wordData = word.map((json) => Word.fromJson(json)).toList();
   sentenceData = sentence;
-  wordScoreData = wordScore;
-  sentenceScoreData = sentenceScore;
+  tagData = tagDataFromJson(tag);
+  wordMetaData =
+      wordMeta.map((json) => WordMeta.fromJson(json, tag: tagData)).toList();
+  sentenceMetaData = sentenceMeta;
 
   wordData.shuffle();
 }
@@ -125,6 +131,28 @@ enum MultiType { single, multi }
 // 性
 enum SexType { f, m, n }
 
+class WordMeta {
+  int wordIdx;
+  List<int> score;
+  List<String> tags;
+
+  WordMeta({required this.wordIdx, required this.tags, required this.score});
+
+  // 連想配列からロード
+  factory WordMeta.fromJson(Map<String, dynamic> json,
+      {required Map<int, String> tag}) {
+    return WordMeta(
+      wordIdx: json["wordIdx"],
+      score: json["score"].cast<int>(),
+      tags: json["tags"]
+          .cast<int>()
+          .map((tagId) => tag[tagId])
+          .cast<String>()
+          .toList(),
+    );
+  }
+}
+
 WordType wordTypeFromString(String wordType) {
   Map<String, WordType> wordMap = {
     "noun": WordType.noun,
@@ -170,6 +198,18 @@ String multiTypeToString(MultiType multiType) {
     case MultiType.multi:
       return "複数";
   }
+}
+
+/// input: [{id: 1, name: tag1}, {id: 2, name: tag2}]
+/// output: {1: tag1, 2: tag2}
+Map<int, String> tagDataFromJson(List<dynamic> json) {
+  Map<int, String> result = {};
+  for (var data in json) {
+    int id = data["id"];
+    String name = data["name"];
+    result[id] = name;
+  }
+  return result;
 }
 
 // --
