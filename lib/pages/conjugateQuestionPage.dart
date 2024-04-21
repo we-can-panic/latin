@@ -65,6 +65,9 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
     Word word = getNextWord();
     NounConjugateType con = getRandomNounConjugateType();
     MultiType mt = getRandomMultiType();
+    if (con == NounConjugateType.nom && mt == MultiType.single) {
+      mt = MultiType.multi;
+    }
     SexType st = word.sex;
     String correctWord = getNounConjugate(word, con, mt, st);
     List<String> words = getRandomConjugated(word, st);
@@ -298,40 +301,41 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
               ),
             ),
             const SizedBox(height: 20),
-            Center(
-                child: Wrap(
-                    spacing: 8.0, // ボタン間のスペース
-                    runSpacing: 8.0, // 行間のスペース
-                    children: List.generate(
-                      words.length,
-                      (index) => ElevatedButton(
-                          // TODO: answeredのボタンごとの個別化
-                          onPressed: () {
-                            answered = true;
-                            if (words[index] == correctWord) {
-                              Future.delayed(const Duration(milliseconds: 500),
-                                  () {
-                                setState(() {});
-                              });
-                            }
-                          },
-                          style: ButtonStyle(backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
-                                  (states) {
-                            if (!answered) {
-                              return Colors.white70;
-                            } else if (words[index] == correctWord) {
-                              // 正解の場合は薄緑色の背景に緑の枠を適用
-                              return Colors.lightGreenAccent;
-                              // 不正解のボタンを選んでいたら灰色
-                            } else {
-                              return Colors.grey.shade700;
-                            }
-                          })),
-                          child: Text(words[index],
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 18))),
-                    ))),
+            SingleChildScrollView(
+                child: Center(
+                    child: Wrap(
+                        spacing: 8.0, // ボタン間のスペース
+                        runSpacing: 8.0, // 行間のスペース
+                        children: List.generate(
+                          words.length,
+                          (index) => ElevatedButton(
+                              // TODO: answeredのボタンごとの個別化
+                              onPressed: () {
+                                answered = true;
+                                if (words[index] == correctWord) {
+                                  Future.delayed(
+                                      const Duration(milliseconds: 500), () {
+                                    setState(() {});
+                                  });
+                                }
+                              },
+                              style: ButtonStyle(backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                      (states) {
+                                if (!answered) {
+                                  return Colors.white70;
+                                } else if (words[index] == correctWord) {
+                                  // 正解の場合は薄緑色の背景に緑の枠を適用
+                                  return Colors.lightGreenAccent;
+                                  // 不正解のボタンを選んでいたら灰色
+                                } else {
+                                  return Colors.grey.shade700;
+                                }
+                              })),
+                              child: Text(words[index],
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18))),
+                        )))),
           ],
         ),
       ),
