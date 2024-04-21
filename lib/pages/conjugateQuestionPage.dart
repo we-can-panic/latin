@@ -7,8 +7,10 @@ Column conjugateStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
     ElevatedButton(
         onPressed: () async {
-          currentTagData = await selectItems(
-              context, tagData.values.toList(), currentTagData, "タグ絞り込み");
+          List<String> tmpTagData = List.from(tagData.values);
+          tmpTagData.add("タグなし");
+          currentTagData =
+              await selectItems(context, tmpTagData, currentTagData, "タグ絞り込み");
         },
         child: Text("タグ絞り込み")),
     SizedBox(height: 20),

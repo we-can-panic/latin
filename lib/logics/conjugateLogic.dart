@@ -34,10 +34,18 @@ List<Word> filterWordData(List<Word> wordData, List<String> currentTagData,
     List<String> activeNumData) {
   List<Word> result = wordData;
 
+  bool addEmpty = currentTagData.contains("タグなし");
   Set<String> tagSet = currentTagData.toSet();
-  result = result
-      .where((item) => tagSet.intersection(getTag(item).toSet()).isNotEmpty)
-      .toList();
+  result = result.where((item) {
+    Set<String> currentTagSets = getTag(item).toSet();
+    if (addEmpty && currentTagSets.isEmpty) {
+      return true;
+    } else if (tagSet.intersection(currentTagSets).isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }).toList();
   result = result.where((item) => activeNumData.contains(item.num)).toList();
 
   return result;
