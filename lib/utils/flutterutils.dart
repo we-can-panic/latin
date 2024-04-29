@@ -114,6 +114,56 @@ Future<List<String>> selectItems(BuildContext context, List<String> items,
   return selectedItems;
 }
 
+Future<String> selectItem(BuildContext context, List<String> items,
+    String beforeSelectedItem, String title) async {
+  // ignore: no_leading_underscores_for_local_identifiers
+  String selectedItem = beforeSelectedItem;
+  await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: items.map((item) {
+                return RadioListTile<String>(
+                  title: Text(item),
+                  value: item,
+                  groupValue: selectedItem,
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedItem = value!;
+                    });
+                  },
+                );
+              }).toList(),
+            );
+          },
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(selectedItem);
+            },
+            child: Text('OK'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop([]);
+              selectedItem = beforeSelectedItem;
+            },
+            child: Text('Cancel'),
+          ),
+        ],
+      );
+    },
+  );
+
+  return selectedItem;
+}
+
 Future<void> showAlertDialog(
     BuildContext context, String title, String message) async {
   return showDialog<void>(

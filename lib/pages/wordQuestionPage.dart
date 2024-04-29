@@ -12,8 +12,16 @@ Column wordStartDivision(BuildContext context) {
           currentTagData =
               await selectItems(context, tmpTagData, currentTagData, "タグ絞り込み");
         },
-        child: Text("タグ絞り込み")),
-    SizedBox(height: 20),
+        child: const Text("タグ絞り込み")),
+    const SizedBox(height: 20),
+    ElevatedButton(
+        onPressed: () async {
+          String res = await selectItem(
+              context, ["英語", "ラテン語"], questionByLa ? "ラテン語" : "英語", "出題言語選択");
+          questionByLa = res == "ラテン語";
+        },
+        child: const Text("出題言語選択")),
+    const SizedBox(height: 20),
     ElevatedButton(
       onPressed: () {
         bool result = resetCurrentWordData();
