@@ -4,8 +4,8 @@ import "../utils/flutterutils.dart";
 
 Column sentenceStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-    SizedBox(height: 50),
-    SizedBox(height: 20),
+    const SizedBox(height: 50),
+    const SizedBox(height: 20),
     ElevatedButton(
       onPressed: () {
         Navigator.push(
@@ -14,6 +14,11 @@ Column sentenceStartDivision(BuildContext context) {
               builder: (context) => const SentenceQuestion(title: "文章テスト")),
         );
       },
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.orange,
+          foregroundColor: Colors.black,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
       child: const Text('文章テスト'),
     ),
   ]);

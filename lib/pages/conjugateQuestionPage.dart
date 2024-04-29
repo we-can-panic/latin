@@ -12,15 +12,15 @@ Column conjugateStartDivision(BuildContext context) {
           currentTagData =
               await selectItems(context, tmpTagData, currentTagData, "タグ絞り込み");
         },
-        child: Text("タグ絞り込み")),
-    SizedBox(height: 20),
+        child: const Text("タグ絞り込み")),
+    const SizedBox(height: 20),
     ElevatedButton(
         onPressed: () async {
           currentNumData =
               await selectItems(context, numList, currentNumData, "変化系絞り込み");
         },
-        child: Text("変化系絞り込み")),
-    SizedBox(height: 20),
+        child: const Text("変化系絞り込み")),
+    const SizedBox(height: 20),
     ElevatedButton(
       onPressed: () {
         bool result = resetCurrentWordData();
@@ -34,6 +34,11 @@ Column conjugateStartDivision(BuildContext context) {
           );
         }
       },
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.orange,
+          foregroundColor: Colors.black,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
       child: const Text('活用テスト'),
     ),
   ]);

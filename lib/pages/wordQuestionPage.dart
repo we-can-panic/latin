@@ -35,6 +35,11 @@ Column wordStartDivision(BuildContext context) {
           );
         }
       },
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.orange,
+          foregroundColor: Colors.black,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
       child: const Text('活用テスト'),
     ),
   ]);
