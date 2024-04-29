@@ -51,9 +51,9 @@ class _WordQuestionState extends State<WordQuestion> {
     List<Word> candidateWords = getRandomWords();
     if (!candidateWords.map((item) => item.en).contains(word.en)) {
       candidateWords[0] = word;
-      candidateWords
-          .sort((a, b) => toAnswer(a).compareTo(toAnswer(b))); // アルファベット順にソート
     }
+    candidateWords
+        .sort((a, b) => toAnswer(a).compareTo(toAnswer(b))); // アルファベット順にソート
 
     return Scaffold(
       appBar: AppBar(
