@@ -19,7 +19,7 @@ Column conjugateStartDivision(BuildContext context) {
           currentNumData =
               await selectItems(context, numList, currentNumData, "変化系絞り込み");
         },
-        child: const Text("変化系絞り込み")),
+        child: const Text("変化絞り込み")),
     const SizedBox(height: 20),
     ElevatedButton(
       onPressed: () {
