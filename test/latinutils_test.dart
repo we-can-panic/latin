@@ -1,5 +1,6 @@
 import 'package:test/test.dart';
 import 'package:latin/utils/latinutils.dart';
+import 'package:latin/models/word.dart';
 
 void main() async {
   // await init();

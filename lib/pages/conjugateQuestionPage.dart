@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import "../utils/latinutils.dart";
 import "../utils/flutterutils.dart";
 import "../logics/conjugateLogic.dart";
+import 'package:latin/utils/latinutils.dart';
+import 'package:latin/models/word.dart';
 
 Column conjugateStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [

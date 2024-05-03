@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:latin/models/word.dart';
+import 'package:latin/models/sentence.dart';
 
-List<Word> wordData = [];
 List<Sentence> sentenceData = [];
 List<WordMeta> wordMetaData = [];
 List<SentenceMeta> sentenceMetaData = [];
@@ -76,170 +77,6 @@ Future<void> init() async {
 // --
 // クラス
 
-// 単語クラス
-class Word {
-  String la;
-  String en;
-  WordType type;
-  String num;
-  SexType sex;
-  int idx;
-
-  Word(
-      {required this.la,
-      required this.en,
-      required this.type,
-      required this.num,
-      required this.sex,
-      required this.idx});
-
-  // 連想配列からロード
-  factory Word.fromJson(Map<String, dynamic> json) {
-    // List<Person> people = jsonData.map((json) => Person.fromJson(json)).toList();
-    return Word(
-      la: json["la"],
-      en: json["en"],
-      type: wordTypeFromString(json["type"]),
-      num: json["num"],
-      sex: sexTypeFromString(json["sex"]),
-      idx: json["idx"],
-    );
-  }
-}
-
-// 単語タイプ
-enum WordType { noun, verb, adjective }
-
-// 単語活用タイプ
-enum NounConjugateType { nom, gen, dat, acc, abl }
-
-// 単数か複数
-enum MultiType { single, multi }
-
-// 性
-enum SexType { f, m, n }
-
-class WordMeta {
-  int wordIdx;
-  List<int> score;
-  List<String> tags;
-
-  WordMeta({required this.wordIdx, required this.tags, required this.score});
-
-  // 連想配列からロード
-  factory WordMeta.fromJson(Map<String, dynamic> json,
-      {required Map<int, String> tag}) {
-    return WordMeta(
-      wordIdx: json["wordIdx"],
-      score: json["score"].cast<int>(),
-      tags: json["tags"]
-          .cast<int>()
-          .map((tagId) => tag[tagId])
-          .cast<String>()
-          .toList(),
-    );
-  }
-}
-
-// 単語クラス
-class Sentence {
-  String la;
-  String en;
-  List<Word> wordComponents;
-  int idx;
-
-  Sentence(
-      {required this.la,
-      required this.en,
-      required this.wordComponents,
-      required this.idx});
-
-  // 連想配列からロード
-  factory Sentence.fromJson(Map<String, dynamic> json) {
-    // List<Person> people = jsonData.map((json) => Person.fromJson(json)).toList();
-    List<dynamic> wordIds = json["wordIds"];
-    List<Word> wordComponents =
-        wordIds.map((idx) => getWordByIdx(idx)).toList();
-    return Sentence(
-      la: json["la"],
-      en: json["en"],
-      wordComponents: wordComponents,
-      idx: json["idx"],
-    );
-  }
-}
-
-// 単語クラス
-class SentenceMeta {
-  int sentenceIdx;
-  List<int> score;
-  List<String> tags;
-
-  SentenceMeta(
-      {required this.sentenceIdx, required this.tags, required this.score});
-
-  // 連想配列からロード
-  factory SentenceMeta.fromJson(Map<String, dynamic> json,
-      {required Map<int, String> tag}) {
-    return SentenceMeta(
-      sentenceIdx: json["sentenceIdx"],
-      score: json["score"].cast<int>(),
-      tags: json["tags"]
-          .cast<int>()
-          .map((tagId) => tag[tagId])
-          .cast<String>()
-          .toList(),
-    );
-  }
-}
-
-WordType wordTypeFromString(String wordType) {
-  Map<String, WordType> wordMap = {
-    "noun": WordType.noun,
-    "verb": WordType.verb,
-    "adjective": WordType.adjective
-  };
-  WordType? result = wordMap[wordType];
-  if (result != null) {
-    return result;
-  } else {
-    return WordType.noun;
-  }
-}
-
-SexType sexTypeFromString(String sexType) {
-  switch (sexType) {
-    case "m":
-      return SexType.m;
-    case "f":
-      return SexType.f;
-    case "n":
-      return SexType.n;
-    default:
-      return SexType.m;
-  }
-}
-
-String sexTypeToString(SexType sexType) {
-  switch (sexType) {
-    case SexType.m:
-      return "男性";
-    case SexType.f:
-      return "女性";
-    case SexType.n:
-      return "中性";
-  }
-}
-
-String multiTypeToString(MultiType multiType) {
-  switch (multiType) {
-    case MultiType.single:
-      return "単数";
-    case MultiType.multi:
-      return "複数";
-  }
-}
-
 /// input: [{id: 1, name: tag1}, {id: 2, name: tag2}]
 /// output: {1: tag1, 2: tag2}
 Map<int, String> tagDataFromJson(List<dynamic> json) {
@@ -259,16 +96,6 @@ List<Word> getRandomWords({int num = 7}) {
   List<Word> words = List.from(wordData);
   words.shuffle();
   return words.sublist(0, 7).toList();
-}
-
-Word getWordByIdx(int idx) {
-  for (var w in wordData) {
-    if (idx == w.idx) {
-      return w;
-    }
-  }
-  return Word(
-      la: "", en: "", type: WordType.noun, num: "1", sex: SexType.f, idx: -1);
 }
 
 // ランダム

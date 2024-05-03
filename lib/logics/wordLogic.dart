@@ -1,4 +1,5 @@
-import "../utils/latinutils.dart";
+import 'package:latin/utils/latinutils.dart';
+import 'package:latin/models/word.dart';
 
 int currentIdx = 0;
 List<Word> currentWordData = [];
