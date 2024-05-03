@@ -1,12 +1,9 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:latin/pages/sentenceQuestionPage.dart';
 import 'package:provider/provider.dart';
-import "utils/latinutils.dart";
-import "utils/flutterutils.dart";
-import "pages/conjugateQuestionPage.dart";
-import "pages/sentenceQuestionPage.dart";
-import "pages/wordQuestionPage.dart";
+import 'package:latin/pages/sentenceQuestionPage.dart';
+import "package:latin/utils/latinutils.dart";
+import "package:latin/pages/conjugateQuestionPage.dart";
+import "package:latin/pages/wordQuestionPage.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,11 +20,11 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (context) => Counter(),
         child: MaterialApp(
-          theme: ThemeData.dark(),
-          // theme: ThemeData(
-          //   primarySwatch: Colors.blue,
-          //   fontFamily: "Monospace, メイリオ",
-          // ),
+          darkTheme: ThemeData.dark(),
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            fontFamily: "Monospace, メイリオ",
+          ),
           home: const Home(title: 'おかたがかゆかゆキングダム'),
         ));
   }

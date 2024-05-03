@@ -406,5 +406,29 @@
     "num": "2",
     "sex": "m",
     "idx": 51
+  },
+  {
+    "la": "Vir",
+    "en": "man",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 52
+  },
+  {
+    "la": "Disciplus",
+    "en": "student",
+    "type": "noun",
+    "num": "2",
+    "sex": "m",
+    "idx": 53
+  },
+  {
+    "la": "Est",
+    "en": "is",
+    "type": "verb",
+    "num": "2",
+    "sex": "m",
+    "idx": 54
   }
 ]

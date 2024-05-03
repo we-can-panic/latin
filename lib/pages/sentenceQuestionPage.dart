@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
 import "../utils/latinutils.dart";
 import "../utils/flutterutils.dart";
+import "../logics/sentenceLogic.dart";
 
 Column sentenceStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-    const SizedBox(height: 50),
+    ElevatedButton(
+        onPressed: () async {
+          List<String> tmpTagData = List.from(tagData.values);
+          tmpTagData.add("タグなし");
+          currentTagData =
+              await selectItems(context, tmpTagData, currentTagData, "タグ絞り込み");
+        },
+        child: const Text("タグ絞り込み")),
     const SizedBox(height: 20),
     ElevatedButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const SentenceQuestion(title: "文章テスト")),
-        );
+        bool result = resetCurrentSentenceData();
+        if (!result) {
+          showAlertDialog(context, "エラー!", "条件に合うワードはありません。絞り込みの設定を見直してみてください");
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const SentenceQuestion(title: "文章テスト")),
+          );
+        }
       },
       style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange,
@@ -27,15 +40,6 @@ Column sentenceStartDivision(BuildContext context) {
 class SentenceQuestion extends StatefulWidget {
   const SentenceQuestion({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -43,69 +47,110 @@ class SentenceQuestion extends StatefulWidget {
 }
 
 class _SentenceQuestionState extends State<SentenceQuestion> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  _SentenceQuestionState();
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the SentenceQuestion object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              // 'You have pushed the button this many times:',
-              'You have clicked the button this many times:',
+            Container(
+              padding: const EdgeInsets.all(30),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
+                  width: 3,
+                ),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.lightGreen,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    sentence.en,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            const SizedBox(height: 20),
+            stringToIcon("$currentIdx/${currentSentenceData.length}",
+                style: StyleType.info),
+            const SizedBox(height: 50),
+            SingleChildScrollView(
+                child: Center(
+                    child: Wrap(
+                        spacing: 8.0, // ボタン間のスペース
+                        runSpacing: 8.0, // 行間のスペース
+                        children: List.generate(
+                          selectedWords.length,
+                          (index) => ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  candidateWords.add(selectedWords[index]);
+                                  selectedWords.removeAt(index);
+                                });
+                              },
+                              child: Text(selectedWords[index].la,
+                                  style: const TextStyle(fontSize: 18))),
+                        )))),
+            const SizedBox(height: 20),
+            const Divider(),
+            const SizedBox(height: 20),
+            SingleChildScrollView(
+                child: Center(
+                    child: Wrap(
+                        spacing: 8.0, // ボタン間のスペース
+                        runSpacing: 8.0, // 行間のスペース
+                        children: List.generate(
+                          candidateWords.length,
+                          (index) => ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedWords.add(candidateWords[index]);
+                                  candidateWords.removeAt(index);
+                                });
+                              },
+                              child: Text(candidateWords[index].la,
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 18))),
+                        )))),
+            const Expanded(child: SizedBox()),
+            ElevatedButton(
+              onPressed: () {
+                Set<String> selected =
+                    Set<String>.from(selectedWords.map((w) => w.la));
+                Set<String> correct =
+                    Set<String>.from(sentence.wordComponents.map((w) => w.la));
+                if (selected.containsAll(correct) &&
+                    correct.containsAll(selected)) {
+                  setState(() {
+                    moveNext();
+                  });
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(100, 30),
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              child: const Icon(Icons.check),
             ),
+            const SizedBox(height: 50),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

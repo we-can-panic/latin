@@ -49,12 +49,6 @@ List<Word> filterWordData(List<Word> wordData, List<String> currentTagData) {
   return result;
 }
 
-List<Word> getRandomWords() {
-  List<Word> words = List.from(wordData);
-  words.shuffle();
-  return words.sublist(0, 7).toList();
-}
-
 String toQuestion(Word word) {
   if (questionByLa) {
     return word.la;

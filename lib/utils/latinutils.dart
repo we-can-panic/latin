@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/services.dart' show rootBundle;
 
 List<Word> wordData = [];
-List<dynamic> sentenceData = [];
+List<Sentence> sentenceData = [];
 List<WordMeta> wordMetaData = [];
-List<dynamic> sentenceMetaData = [];
+List<SentenceMeta> sentenceMetaData = [];
 Map<int, String> tagData = {};
 
 const List<String> numList = ["1", "2", "3", "3i"];
@@ -16,6 +16,15 @@ const List<String> numList = ["1", "2", "3", "3i"];
 List<String> getTag(Word word) {
   for (var m in wordMetaData) {
     if (m.wordIdx == word.idx) {
+      return m.tags;
+    }
+  }
+  return [];
+}
+
+List<String> getTagOfSentence(Sentence sentence) {
+  for (var m in sentenceMetaData) {
+    if (m.sentenceIdx == sentence.idx) {
       return m.tags;
     }
   }
@@ -53,11 +62,13 @@ Future<void> init() async {
   List<dynamic> tag = jsonDecode(tagStr);
 
   wordData = word.map((json) => Word.fromJson(json)).toList();
-  sentenceData = sentence;
+  sentenceData = sentence.map((json) => Sentence.fromJson(json)).toList();
   tagData = tagDataFromJson(tag);
   wordMetaData =
       wordMeta.map((json) => WordMeta.fromJson(json, tag: tagData)).toList();
-  sentenceMetaData = sentenceMeta;
+  sentenceMetaData = sentenceMeta
+      .map((json) => SentenceMeta.fromJson(json, tag: tagData))
+      .toList();
 
   wordData.shuffle();
 }
@@ -130,6 +141,58 @@ class WordMeta {
   }
 }
 
+// 単語クラス
+class Sentence {
+  String la;
+  String en;
+  List<Word> wordComponents;
+  int idx;
+
+  Sentence(
+      {required this.la,
+      required this.en,
+      required this.wordComponents,
+      required this.idx});
+
+  // 連想配列からロード
+  factory Sentence.fromJson(Map<String, dynamic> json) {
+    // List<Person> people = jsonData.map((json) => Person.fromJson(json)).toList();
+    List<dynamic> wordIds = json["wordIds"];
+    List<Word> wordComponents =
+        wordIds.map((idx) => getWordByIdx(idx)).toList();
+    return Sentence(
+      la: json["la"],
+      en: json["en"],
+      wordComponents: wordComponents,
+      idx: json["idx"],
+    );
+  }
+}
+
+// 単語クラス
+class SentenceMeta {
+  int sentenceIdx;
+  List<int> score;
+  List<String> tags;
+
+  SentenceMeta(
+      {required this.sentenceIdx, required this.tags, required this.score});
+
+  // 連想配列からロード
+  factory SentenceMeta.fromJson(Map<String, dynamic> json,
+      {required Map<int, String> tag}) {
+    return SentenceMeta(
+      sentenceIdx: json["sentenceIdx"],
+      score: json["score"].cast<int>(),
+      tags: json["tags"]
+          .cast<int>()
+          .map((tagId) => tag[tagId])
+          .cast<String>()
+          .toList(),
+    );
+  }
+}
+
 WordType wordTypeFromString(String wordType) {
   Map<String, WordType> wordMap = {
     "noun": WordType.noun,
@@ -191,6 +254,22 @@ Map<int, String> tagDataFromJson(List<dynamic> json) {
 
 // --
 // Middle関数
+
+List<Word> getRandomWords({int num = 7}) {
+  List<Word> words = List.from(wordData);
+  words.shuffle();
+  return words.sublist(0, 7).toList();
+}
+
+Word getWordByIdx(int idx) {
+  for (var w in wordData) {
+    if (idx == w.idx) {
+      return w;
+    }
+  }
+  return Word(
+      la: "", en: "", type: WordType.noun, num: "1", sex: SexType.f, idx: -1);
+}
 
 // ランダム
 NounConjugateType getRandomNounConjugateType() {
