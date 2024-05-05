@@ -1,4 +1,4 @@
-import 'package:latin/utils/latinutils.dart';
+import 'package:latin/models/components.dart';
 import 'package:latin/models/word.dart';
 import 'package:latin/models/sentence.dart';
 import 'package:latin/models/tag.dart';

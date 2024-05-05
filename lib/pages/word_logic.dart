@@ -1,17 +1,16 @@
-import 'package:latin/utils/latinutils.dart';
+import 'package:latin/models/components.dart';
 import 'package:latin/models/word.dart';
 import 'package:latin/models/tag.dart';
 
 int currentIdx = 0;
-List<Word> currentWordData = []; // Conjugateの条件のみを抜き出したwordData
-
+List<Word> currentWordData = [];
 List<String> currentTagData = tagData.values.toList();
-List<String> currentNumData = numList;
+bool questionByLa = false;
 
 // 各種値をリセットし整合性の結果を返す
 bool resetCurrentWordData() {
   currentIdx = 0;
-  currentWordData = filterWordData(wordData, currentTagData, currentNumData);
+  currentWordData = filterWordData(wordData, currentTagData);
   currentWordData.shuffle();
   // 整合性: currentWordDataが0でないこと
   return currentWordData.isNotEmpty;
@@ -33,8 +32,7 @@ Word getNextWord() {
   }
 }
 
-List<Word> filterWordData(List<Word> wordData, List<String> currentTagData,
-    List<String> activeNumData) {
+List<Word> filterWordData(List<Word> wordData, List<String> currentTagData) {
   List<Word> result = wordData;
 
   bool addEmpty = currentTagData.contains("タグなし");
@@ -49,7 +47,22 @@ List<Word> filterWordData(List<Word> wordData, List<String> currentTagData,
       return false;
     }
   }).toList();
-  result = result.where((item) => activeNumData.contains(item.num)).toList();
 
   return result;
+}
+
+String toQuestion(Word word) {
+  if (questionByLa) {
+    return word.la;
+  } else {
+    return word.en;
+  }
+}
+
+String toAnswer(Word word) {
+  if (questionByLa) {
+    return word.en;
+  } else {
+    return word.la;
+  }
 }

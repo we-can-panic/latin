@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import "../utils/flutterutils.dart";
-import "../logics/conjugateLogic.dart";
-import 'package:latin/utils/latinutils.dart';
+import "components.dart";
+import "conjugate_logic.dart";
+import 'package:latin/models/components.dart';
 import 'package:latin/models/word.dart';
 import 'package:latin/models/tag.dart';
 

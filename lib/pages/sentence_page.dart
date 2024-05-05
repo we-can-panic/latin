@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import "../utils/latinutils.dart";
-import "../utils/flutterutils.dart";
-import "../logics/sentenceLogic.dart";
+import "../models/components.dart";
+import "components.dart";
+import "sentence_logic.dart";
 import 'package:latin/models/tag.dart';
 
 Column sentenceStartDivision(BuildContext context) {

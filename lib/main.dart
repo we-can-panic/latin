@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:latin/pages/sentenceQuestionPage.dart';
-import "package:latin/utils/latinutils.dart";
-import "package:latin/pages/conjugateQuestionPage.dart";
-import "package:latin/pages/wordQuestionPage.dart";
+import 'package:latin/pages/sentence_page.dart';
+import "package:latin/models/components.dart";
+import "package:latin/pages/conjugate_page.dart";
+import "package:latin/pages/word_page.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
