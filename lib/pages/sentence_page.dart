@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import "../models/components.dart";
+import 'package:latin/models/tag.dart';
 import "components.dart";
 import "sentence_logic.dart";
-import 'package:latin/models/tag.dart';
 
 Column sentenceStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [

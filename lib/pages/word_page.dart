@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import "components.dart";
-import "word_logic.dart";
-import 'package:latin/models/components.dart';
 import 'package:latin/models/word.dart';
 import 'package:latin/models/tag.dart';
+import "components.dart";
+import "word_logic.dart";
 
 Column wordStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
