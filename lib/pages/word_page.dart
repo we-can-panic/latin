@@ -32,7 +32,7 @@ Column wordStartDivision(BuildContext context) {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const WordQuestion(title: "活用テスト")),
+                builder: (context) => const WordQuestion(title: "単語テスト")),
           );
         }
       },
