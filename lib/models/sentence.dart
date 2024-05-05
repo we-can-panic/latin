@@ -1,5 +1,8 @@
 import 'word.dart';
 
+List<Sentence> sentenceData = [];
+List<SentenceMeta> sentenceMetaData = [];
+
 class Sentence {
   String la;
   String en;
@@ -48,4 +51,13 @@ class SentenceMeta {
           .toList(),
     );
   }
+}
+
+List<String> getTagOfSentence(Sentence sentence) {
+  for (var m in sentenceMetaData) {
+    if (m.sentenceIdx == sentence.idx) {
+      return m.tags;
+    }
+  }
+  return [];
 }

@@ -1,5 +1,6 @@
 import 'package:latin/utils/latinutils.dart';
 import 'package:latin/models/word.dart';
+import 'package:latin/models/tag.dart';
 
 int currentIdx = 0;
 List<Word> currentWordData = [];
