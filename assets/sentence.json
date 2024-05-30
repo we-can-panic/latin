@@ -2,7 +2,8 @@
   {
     "en": "The student is man.",
     "la": "disciplus vir est",
-    "wordIds": [52, 53, 54],
+    "nounIds": [52, 53],
+    "verbIds": [1],
     "idx": 1
   }
 ]

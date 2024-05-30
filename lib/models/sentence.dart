@@ -1,63 +1,37 @@
-import 'word.dart';
-
-List<Sentence> sentenceData = [];
-List<SentenceMeta> sentenceMetaData = [];
+import 'noun.dart';
+import 'noun_utils.dart';
+import 'verb.dart';
+import 'verb_utils.dart';
 
 class Sentence {
   String la;
   String en;
-  List<Word> wordComponents;
+  List<Noun> nounComponents;
+  List<Verb> verbComponents;
   int idx;
 
   Sentence(
       {required this.la,
       required this.en,
-      required this.wordComponents,
+      required this.nounComponents,
+      required this.verbComponents,
       required this.idx});
 
   // 連想配列からロード
   factory Sentence.fromJson(Map<String, dynamic> json) {
     // List<Person> people = jsonData.map((json) => Person.fromJson(json)).toList();
-    List<dynamic> wordIds = json["wordIds"];
-    List<Word> wordComponents =
-        wordIds.map((idx) => getWordByIdx(idx)).toList();
+    List<dynamic> nounIds = json["nounIds"];
+    List<dynamic> verbIds = json["verbIds"];
+    List<Noun> nounComponents =
+        nounIds.map((idx) => getNounByIdx(idx)).toList();
+    List<Verb> verbComponents =
+        verbIds.map((idx) => getVerbByIdx(idx)).toList();
     return Sentence(
       la: json["la"],
       en: json["en"],
-      wordComponents: wordComponents,
+      nounComponents: nounComponents,
+      verbComponents: verbComponents,
       idx: json["idx"],
     );
   }
-}
-
-class SentenceMeta {
-  int sentenceIdx;
-  List<int> score;
-  List<String> tags;
-
-  SentenceMeta(
-      {required this.sentenceIdx, required this.tags, required this.score});
-
-  // 連想配列からロード
-  factory SentenceMeta.fromJson(Map<String, dynamic> json,
-      {required Map<int, String> tag}) {
-    return SentenceMeta(
-      sentenceIdx: json["sentenceIdx"],
-      score: json["score"].cast<int>(),
-      tags: json["tags"]
-          .cast<int>()
-          .map((tagId) => tag[tagId])
-          .cast<String>()
-          .toList(),
-    );
-  }
-}
-
-List<String> getTagOfSentence(Sentence sentence) {
-  for (var m in sentenceMetaData) {
-    if (m.sentenceIdx == sentence.idx) {
-      return m.tags;
-    }
-  }
-  return [];
 }

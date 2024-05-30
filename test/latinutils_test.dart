@@ -1,12 +1,14 @@
-import 'package:test/test.dart';
+import 'package:latin/models/noun_utils.dart';
 import 'package:latin/models/word.dart';
+import 'package:test/test.dart';
+import 'package:latin/models/noun.dart';
 
 void main() async {
   // await init();
   test('canis conjugate', () {
     expect(
         getNounConjugate(
-            Word.fromJson({
+            Noun.fromJson({
               "la": "Canis",
               "en": "Dog",
               "type": "noun",
@@ -15,7 +17,7 @@ void main() async {
               "idx": 10
             }),
             NounConjugateType.acc,
-            MultiType.multi,
+            Numbers.multi,
             SexType.m),
         "Canēs");
   });

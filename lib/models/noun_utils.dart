@@ -1,152 +1,37 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import 'dart:math';
+import 'noun.dart';
+import 'word.dart';
 
-List<Word> wordData = []; // 全てのWordデータ
-List<WordMeta> wordMetaData = []; // メタデータ
+List<Noun> nounData = []; // 全てのNounデータ
 
-// 単語の数
 const List<String> numList = ["1", "2", "3", "3i"];
 
-// wordクラス
-class Word {
-  String la;
-  String en;
-  WordType type;
-  String num;
-  SexType sex;
-  int idx;
-
-  Word(
-      {required this.la,
-      required this.en,
-      required this.type,
-      required this.num,
-      required this.sex,
-      required this.idx});
-
-  // 連想配列からロード
-  factory Word.fromJson(Map<String, dynamic> json) {
-    // List<Person> people = jsonData.map((json) => Person.fromJson(json)).toList();
-    return Word(
-      la: json["la"],
-      en: json["en"],
-      type: wordTypeFromString(json["type"]),
-      num: json["num"],
-      sex: sexTypeFromString(json["sex"]),
-      idx: json["idx"],
-    );
-  }
-}
-
-// 単語タイプ
-enum WordType { noun, verb, adjective }
-
-// 単語活用タイプ
-enum NounConjugateType { nom, gen, dat, acc, abl }
-
-// 単数か複数
-enum MultiType { single, multi }
-
-// 性
-enum SexType { f, m, n }
-
-// メタデータクラス
-class WordMeta {
-  int wordIdx;
-  List<int> score;
-  List<String> tags;
-
-  WordMeta({required this.wordIdx, required this.tags, required this.score});
-
-  // 連想配列からロード
-  factory WordMeta.fromJson(Map<String, dynamic> json,
-      {required Map<int, String> tag}) {
-    return WordMeta(
-      wordIdx: json["wordIdx"],
-      score: json["score"].cast<int>(),
-      tags: json["tags"]
-          .cast<int>()
-          .map((tagId) => tag[tagId])
-          .cast<String>()
-          .toList(),
-    );
-  }
-}
-
-WordType wordTypeFromString(String wordType) {
-  Map<String, WordType> wordMap = {
-    "noun": WordType.noun,
-    "verb": WordType.verb,
-    "adjective": WordType.adjective
-  };
-  WordType? result = wordMap[wordType];
-  if (result != null) {
-    return result;
-  } else {
-    return WordType.noun;
-  }
-}
-
-SexType sexTypeFromString(String sexType) {
-  switch (sexType) {
-    case "m":
-      return SexType.m;
-    case "f":
-      return SexType.f;
-    case "n":
-      return SexType.n;
-    default:
-      return SexType.m;
-  }
-}
-
-String sexTypeToString(SexType sexType) {
-  switch (sexType) {
-    case SexType.m:
-      return "男性";
-    case SexType.f:
-      return "女性";
-    case SexType.n:
-      return "中性";
-  }
-}
-
-String multiTypeToString(MultiType multiType) {
-  switch (multiType) {
-    case MultiType.single:
-      return "単数";
-    case MultiType.multi:
-      return "複数";
-  }
+Future<void> loadNounData() async {
+  String nounStr = await rootBundle.loadString('assets/noun.json');
+  List<dynamic> noun = jsonDecode(nounStr);
+  nounData = noun.map((json) => Noun.fromJson(json)).toList();
 }
 
 // --
 // Util関数
 
-// 特定のidxのwordを取得
-Word getWordByIdx(int idx) {
-  for (var w in wordData) {
+// 特定のidxのnounを取得
+Noun getNounByIdx(int idx) {
+  for (var w in nounData) {
     if (idx == w.idx) {
       return w;
     }
   }
-  return Word(
-      la: "", en: "", type: WordType.noun, num: "1", sex: SexType.f, idx: -1);
+  return Noun(
+      la: "", en: "", type: NounType.noun, num: "1", sex: SexType.f, idx: -1);
 }
 
-// Wordに紐づいているTagを取得
-List<String> getTag(Word word) {
-  for (var m in wordMetaData) {
-    if (m.wordIdx == word.idx) {
-      return m.tags;
-    }
-  }
-  return [];
-}
-
-List<Word> getRandomWords({int num = 7}) {
-  List<Word> words = List.from(wordData);
-  words.shuffle();
-  return words.sublist(0, 7).toList();
+List<Noun> getRandomNouns({int num = 7}) {
+  List<Noun> nouns = List.from(nounData);
+  nouns.shuffle();
+  return nouns.sublist(0, num).toList();
 }
 
 // ランダム
@@ -156,27 +41,20 @@ NounConjugateType getRandomNounConjugateType() {
   return list[randomIndex];
 }
 
-MultiType getRandomMultiType() {
-  List<MultiType> list = MultiType.values;
-  int randomIndex = random.nextInt(list.length);
-  return list[randomIndex];
-}
-
 // 単語の活用
-String getNounConjugate(
-    Word word, NounConjugateType w, MultiType m, SexType s) {
-  switch (word.num) {
+String getNounConjugate(Noun noun, NounConjugateType w, Numbers m, SexType s) {
+  switch (noun.num) {
     case '1': // a
-      String stem = word.la.substring(0, word.la.length - 1);
-      Map<MultiType, Map<NounConjugateType, String>> map = {
-        MultiType.single: {
+      String stem = noun.la.substring(0, noun.la.length - 1);
+      Map<Numbers, Map<NounConjugateType, String>> map = {
+        Numbers.single: {
           NounConjugateType.nom: "a",
           NounConjugateType.gen: "ae",
           NounConjugateType.dat: "ae",
           NounConjugateType.acc: "am",
           NounConjugateType.abl: "ā",
         },
-        MultiType.multi: {
+        Numbers.multi: {
           NounConjugateType.nom: "ae",
           NounConjugateType.gen: "ārum",
           NounConjugateType.dat: "īs",
@@ -187,9 +65,9 @@ String getNounConjugate(
       return stem + map[m]![w]!;
     case '2': // us, um, er
       String stem = "";
-      if (word.la.endsWith("er")) {
-        if (w == NounConjugateType.nom && m == MultiType.single) {
-          return word.la;
+      if (noun.la.endsWith("er")) {
+        if (w == NounConjugateType.nom && m == Numbers.single) {
+          return noun.la;
         }
         List<String> liberList = [
           "liber",
@@ -198,24 +76,24 @@ String getNounConjugate(
           "prosper",
           "tener"
         ];
-        if (liberList.contains(word.la)) {
-          stem = word.la;
+        if (liberList.contains(noun.la)) {
+          stem = noun.la;
         } else {
-          stem = "${word.la.substring(0, word.la.length - 2)}r";
+          stem = "${noun.la.substring(0, noun.la.length - 2)}r";
         }
       } else {
-        stem = word.la.substring(0, word.la.length - 2);
+        stem = noun.la.substring(0, noun.la.length - 2);
       }
       if (s == SexType.m) {
-        Map<MultiType, Map<NounConjugateType, String>> map = {
-          MultiType.single: {
+        Map<Numbers, Map<NounConjugateType, String>> map = {
+          Numbers.single: {
             NounConjugateType.nom: "us",
             NounConjugateType.gen: "ī",
             NounConjugateType.dat: "ō",
             NounConjugateType.acc: "um",
             NounConjugateType.abl: "ō",
           },
-          MultiType.multi: {
+          Numbers.multi: {
             NounConjugateType.nom: "ī",
             NounConjugateType.gen: "ōrum",
             NounConjugateType.dat: "īs",
@@ -225,15 +103,15 @@ String getNounConjugate(
         };
         return stem + map[m]![w]!;
       } else {
-        Map<MultiType, Map<NounConjugateType, String>> map = {
-          MultiType.single: {
+        Map<Numbers, Map<NounConjugateType, String>> map = {
+          Numbers.single: {
             NounConjugateType.nom: "um",
             NounConjugateType.gen: "ī",
             NounConjugateType.dat: "ō",
             NounConjugateType.acc: "um",
             NounConjugateType.abl: "ō",
           },
-          MultiType.multi: {
+          Numbers.multi: {
             NounConjugateType.nom: "a",
             NounConjugateType.gen: "ārum",
             NounConjugateType.dat: "īs",
@@ -244,33 +122,33 @@ String getNounConjugate(
         return stem + map[m]![w]!;
       }
     case '3': // homō. leō, lex, genus, caput, nomen, canis
-      if (w == NounConjugateType.nom && m == MultiType.single) {
-        return word.la;
+      if (w == NounConjugateType.nom && m == Numbers.single) {
+        return noun.la;
       }
       // 男性か女性ならhomō, leō, lex, canis
       if (s == SexType.f || s == SexType.m) {
         String stem = "";
-        if (word.la.endsWith("is")) {
-          stem = word.la.substring(0, word.la.length - 2);
+        if (noun.la.endsWith("is")) {
+          stem = noun.la.substring(0, noun.la.length - 2);
           // 末尾がxならlex
-        } else if (word.la[word.la.length - 1] == "x") {
-          stem = "${word.la.substring(0, word.la.length - 1)}g";
+        } else if (noun.la[noun.la.length - 1] == "x") {
+          stem = "${noun.la.substring(0, noun.la.length - 1)}g";
           // 2番目が母音ならleo
-        } else if ("aiueoāīūēō".contains(word.la[word.la.length - 2])) {
-          stem = "${word.la}n";
+        } else if ("aiueoāīūēō".contains(noun.la[noun.la.length - 2])) {
+          stem = "${noun.la}n";
           // 子音ならhomo
         } else {
-          stem = "${word.la.substring(0, word.la.length - 1)}in";
+          stem = "${noun.la.substring(0, noun.la.length - 1)}in";
         }
-        Map<MultiType, Map<NounConjugateType, String>> map = {
-          MultiType.single: {
+        Map<Numbers, Map<NounConjugateType, String>> map = {
+          Numbers.single: {
             NounConjugateType.nom: "",
             NounConjugateType.gen: "is",
             NounConjugateType.dat: "ī",
             NounConjugateType.acc: "em",
             NounConjugateType.abl: "e",
           },
-          MultiType.multi: {
+          Numbers.multi: {
             NounConjugateType.nom: "ēs",
             NounConjugateType.gen: "um",
             NounConjugateType.dat: "ibus",
@@ -281,33 +159,33 @@ String getNounConjugate(
         return stem + map[m]![w]!;
       } else {
         // genus, caput, nomen
-        if ((m == MultiType.single) &&
+        if ((m == Numbers.single) &&
             (w == NounConjugateType.nom || w == NounConjugateType.acc)) {
-          return word.la;
+          return noun.la;
         }
         String stem = "";
-        switch (word.la.substring(word.la.length - 2, word.la.length)) {
+        switch (noun.la.substring(noun.la.length - 2, noun.la.length)) {
           case "ut":
-            stem = "${word.la.substring(0, word.la.length - 2)}it";
+            stem = "${noun.la.substring(0, noun.la.length - 2)}it";
             break;
           case "us":
-            stem = "${word.la.substring(0, word.la.length - 2)}or";
+            stem = "${noun.la.substring(0, noun.la.length - 2)}or";
             break;
           case "en":
-            stem = "${word.la.substring(0, word.la.length - 2)}in";
+            stem = "${noun.la.substring(0, noun.la.length - 2)}in";
             break;
           default:
-            stem = word.la;
+            stem = noun.la;
         }
-        Map<MultiType, Map<NounConjugateType, String>> map = {
-          MultiType.single: {
+        Map<Numbers, Map<NounConjugateType, String>> map = {
+          Numbers.single: {
             NounConjugateType.nom: "",
             NounConjugateType.gen: "is",
             NounConjugateType.dat: "ī",
             NounConjugateType.acc: "",
             NounConjugateType.abl: "e",
           },
-          MultiType.multi: {
+          Numbers.multi: {
             NounConjugateType.nom: "a",
             NounConjugateType.gen: "um",
             NounConjugateType.dat: "ibus",
@@ -318,21 +196,21 @@ String getNounConjugate(
         return stem + map[m]![w]!;
       }
     case '3i': // ignis, animal, feles, calcar
-      if (m == MultiType.single && w == NounConjugateType.nom) {
-        return word.la;
+      if (m == Numbers.single && w == NounConjugateType.nom) {
+        return noun.la;
       }
       // is, es, s, -(er), -(al, ar), e
-      if (word.la.endsWith("is")) {
-        String stem = word.la.substring(0, word.la.length - 2);
-        Map<MultiType, Map<NounConjugateType, String>> map = {
-          MultiType.single: {
+      if (noun.la.endsWith("is")) {
+        String stem = noun.la.substring(0, noun.la.length - 2);
+        Map<Numbers, Map<NounConjugateType, String>> map = {
+          Numbers.single: {
             NounConjugateType.nom: "is",
             NounConjugateType.gen: "is",
             NounConjugateType.dat: "ī",
             NounConjugateType.acc: "im",
             NounConjugateType.abl: "ī",
           },
-          MultiType.multi: {
+          Numbers.multi: {
             NounConjugateType.nom: "ēs",
             NounConjugateType.gen: "ium",
             NounConjugateType.dat: "ibus",
@@ -341,17 +219,17 @@ String getNounConjugate(
           }
         };
         return stem + map[m]![w]!;
-      } else if (word.la.endsWith("es") || word.la.endsWith("ēs")) {
-        String stem = word.la.substring(0, word.la.length - 2);
-        Map<MultiType, Map<NounConjugateType, String>> map = {
-          MultiType.single: {
+      } else if (noun.la.endsWith("es") || noun.la.endsWith("ēs")) {
+        String stem = noun.la.substring(0, noun.la.length - 2);
+        Map<Numbers, Map<NounConjugateType, String>> map = {
+          Numbers.single: {
             NounConjugateType.nom: "ēs",
             NounConjugateType.gen: "is",
             NounConjugateType.dat: "ī",
             NounConjugateType.acc: "em",
             NounConjugateType.abl: "e",
           },
-          MultiType.multi: {
+          Numbers.multi: {
             NounConjugateType.nom: "ēs",
             NounConjugateType.gen: "ium",
             NounConjugateType.dat: "ibus",
@@ -360,17 +238,17 @@ String getNounConjugate(
           }
         };
         return stem + map[m]![w]!;
-      } else if (word.la.endsWith("s")) {
-        String stem = word.la.substring(0, word.la.length - 1);
-        Map<MultiType, Map<NounConjugateType, String>> map = {
-          MultiType.single: {
+      } else if (noun.la.endsWith("s")) {
+        String stem = noun.la.substring(0, noun.la.length - 1);
+        Map<Numbers, Map<NounConjugateType, String>> map = {
+          Numbers.single: {
             NounConjugateType.nom: "s",
             NounConjugateType.gen: "is",
             NounConjugateType.dat: "ī",
             NounConjugateType.acc: "em",
             NounConjugateType.abl: "e",
           },
-          MultiType.multi: {
+          Numbers.multi: {
             NounConjugateType.nom: "ēs",
             NounConjugateType.gen: "ium",
             NounConjugateType.dat: "ibus",
@@ -379,17 +257,17 @@ String getNounConjugate(
           }
         };
         return stem + map[m]![w]!;
-      } else if (word.la.endsWith("er")) {
-        String stem = "${word.la.substring(0, word.la.length - 2)}r";
-        Map<MultiType, Map<NounConjugateType, String>> map = {
-          MultiType.single: {
+      } else if (noun.la.endsWith("er")) {
+        String stem = "${noun.la.substring(0, noun.la.length - 2)}r";
+        Map<Numbers, Map<NounConjugateType, String>> map = {
+          Numbers.single: {
             NounConjugateType.nom: "er",
             NounConjugateType.gen: "is",
             NounConjugateType.dat: "ī",
             NounConjugateType.acc: "em",
             NounConjugateType.abl: "e",
           },
-          MultiType.multi: {
+          Numbers.multi: {
             NounConjugateType.nom: "ēs",
             NounConjugateType.gen: "ium",
             NounConjugateType.dat: "ibus",
@@ -399,24 +277,24 @@ String getNounConjugate(
         };
         return stem + map[m]![w]!;
       } else if (["al", "āl", "ar", "ār"]
-          .contains(word.la.substring(word.la.length - 2, word.la.length))) {
-        if (m == MultiType.single && w == NounConjugateType.acc) {
-          return word.la;
+          .contains(noun.la.substring(noun.la.length - 2, noun.la.length))) {
+        if (m == Numbers.single && w == NounConjugateType.acc) {
+          return noun.la;
         }
-        String stem = word.la.endsWith("al")
-            ? "${word.la.substring(0, word.la.length - 2)}āl"
-            : word.la.endsWith("ar")
-                ? "${word.la.substring(0, word.la.length - 2)}ār"
-                : word.la;
-        Map<MultiType, Map<NounConjugateType, String>> map = {
-          MultiType.single: {
+        String stem = noun.la.endsWith("al")
+            ? "${noun.la.substring(0, noun.la.length - 2)}āl"
+            : noun.la.endsWith("ar")
+                ? "${noun.la.substring(0, noun.la.length - 2)}ār"
+                : noun.la;
+        Map<Numbers, Map<NounConjugateType, String>> map = {
+          Numbers.single: {
             NounConjugateType.nom: "",
             NounConjugateType.gen: "is",
             NounConjugateType.dat: "ī",
             NounConjugateType.acc: "",
             NounConjugateType.abl: "ī",
           },
-          MultiType.multi: {
+          Numbers.multi: {
             NounConjugateType.nom: "ia",
             NounConjugateType.gen: "ium",
             NounConjugateType.dat: "ibus",
@@ -427,16 +305,16 @@ String getNounConjugate(
         return stem + map[m]![w]!;
       } else {
         // mare
-        String stem = word.la.substring(0, word.la.length - 2);
-        Map<MultiType, Map<NounConjugateType, String>> map = {
-          MultiType.single: {
+        String stem = noun.la.substring(0, noun.la.length - 2);
+        Map<Numbers, Map<NounConjugateType, String>> map = {
+          Numbers.single: {
             NounConjugateType.nom: "e",
             NounConjugateType.gen: "is",
             NounConjugateType.dat: "ī",
             NounConjugateType.acc: "e",
             NounConjugateType.abl: "ī",
           },
-          MultiType.multi: {
+          Numbers.multi: {
             NounConjugateType.nom: "ia",
             NounConjugateType.gen: "ium",
             NounConjugateType.dat: "ibus",
@@ -447,16 +325,16 @@ String getNounConjugate(
         return stem + map[m]![w]!;
       }
     default:
-      return "<Unknown word>: ${word.la}${word.num}";
+      return "<Unknown noun>: ${noun.la}${noun.num}";
   }
 }
 
 // ランダムな数/格の単語をいくつか返す
-List<String> getRandomConjugated(Word word, SexType s, {int size = 5}) {
+List<String> getRandomConjugated(Noun noun, SexType s, {int size = 5}) {
   List<String> allCandidate = [];
-  for (var m in MultiType.values) {
+  for (var m in Numbers.values) {
     for (var c in NounConjugateType.values) {
-      allCandidate.add(getNounConjugate(word, c, m, s));
+      allCandidate.add(getNounConjugate(noun, c, m, s));
     }
   }
 

@@ -1,6 +1,11 @@
 import 'package:latin/models/word.dart';
+import 'package:latin/models/noun.dart';
+import 'package:latin/models/noun_utils.dart';
+import 'package:latin/models/verb.dart';
+import 'package:latin/models/verb_utils.dart';
 import 'package:latin/models/sentence.dart';
-import 'package:latin/models/tag.dart';
+import 'package:latin/models/sentence_utils.dart';
+import 'package:latin/models/meta_utils.dart';
 
 int currentIdx = 0;
 List<Sentence> currentSentenceData = [];
@@ -8,8 +13,35 @@ List<String> currentTagData = tagData.values.toList();
 bool questionByLa = false;
 
 Sentence sentence = getNextSentence();
-List<Word> candidateWords = getRandomWords(num: 4);
-List<Word> selectedWords = [];
+List<Noun> candidateNouns = getRandomNouns(num: 4);
+List<Verb> candidateVerbs = getRandomVerbs(num: 4);
+List<NounOrVerb> candidateWords = []; // 未選択の単語
+List<NounOrVerb> selectedWords = []; // 選択済みの単語
+
+enum WordType { verb, noun }
+
+class NounOrVerb {
+  WordType type;
+  int idx;
+  NounOrVerb({required this.type, required this.idx});
+}
+
+String getQuestion(NounOrVerb nv) {
+  Word word;
+  switch (nv.type) {
+    case WordType.verb:
+      word = candidateVerbs[nv.idx];
+      break;
+    case WordType.noun:
+      word = candidateNouns[nv.idx];
+      break;
+  }
+  if (questionByLa) {
+    return word.en;
+  } else {
+    return word.la;
+  }
+}
 
 // 各種値をリセットし整合性の結果を返す
 bool resetCurrentSentenceData() {
@@ -23,9 +55,18 @@ bool resetCurrentSentenceData() {
 
 bool moveNext() {
   sentence = getNextSentence();
-  candidateWords = getRandomWords(num: 4);
-  candidateWords.addAll(sentence.wordComponents);
-  candidateWords.sort((a, b) => (a.la).compareTo(b.la));
+  candidateNouns = getRandomNouns(num: 2);
+  candidateNouns.addAll(sentence.nounComponents);
+  candidateVerbs = getRandomVerbs(num: 2);
+  candidateVerbs.addAll(sentence.verbComponents);
+  candidateWords = [];
+  for (var i = 0; i < candidateNouns.length; i++) {
+    candidateWords.add(NounOrVerb(type: WordType.noun, idx: i));
+  }
+  for (var i = 0; i < candidateVerbs.length; i++) {
+    candidateWords.add(NounOrVerb(type: WordType.verb, idx: i));
+  }
+  candidateWords.sort((a, b) => getQuestion(a).compareTo(getQuestion(b)));
   selectedWords = [];
   return true;
 }
@@ -33,7 +74,8 @@ bool moveNext() {
 // 次の単語を返す
 Sentence getNextSentence() {
   if (currentSentenceData.isEmpty) {
-    return Sentence(la: "", en: "", wordComponents: [], idx: 0);
+    return Sentence(
+        la: "", en: "", nounComponents: [], verbComponents: [], idx: 0);
   }
   if (currentIdx < currentSentenceData.length) {
     Sentence result = currentSentenceData[currentIdx];
@@ -52,7 +94,7 @@ List<Sentence> filterSentenceData(
   bool addEmpty = currentTagData.contains("タグなし");
   Set<String> tagSet = currentTagData.toSet();
   result = result.where((item) {
-    Set<String> currentTagSets = getTagOfSentence(item).toSet();
+    Set<String> currentTagSets = getSentenceTag(item).toSet();
     if (addEmpty && currentTagSets.isEmpty) {
       return true;
     } else if (tagSet.intersection(currentTagSets).isNotEmpty) {

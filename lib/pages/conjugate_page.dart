@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:latin/models/word.dart';
-import 'package:latin/models/tag.dart';
+import 'package:latin/models/noun.dart';
+import 'package:latin/models/noun_utils.dart';
+import 'package:latin/models/meta_utils.dart';
+import 'package:latin/models/noun.dart';
 import "components.dart";
 import "conjugate_logic.dart";
 
@@ -24,7 +27,7 @@ Column conjugateStartDivision(BuildContext context) {
     const SizedBox(height: 20),
     ElevatedButton(
       onPressed: () {
-        bool result = resetCurrentWordData();
+        bool result = resetCurrentNounData();
         if (!result) {
           showAlertDialog(context, "エラー!", "条件に合うワードはありません。絞り込みの設定を見直してみてください");
         } else {
@@ -68,22 +71,22 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    Word word = getNextWord();
+    Noun noun = getNextNoun();
     NounConjugateType con = getRandomNounConjugateType();
-    MultiType mt = getRandomMultiType();
-    if (con == NounConjugateType.nom && mt == MultiType.single) {
-      mt = MultiType.multi;
+    Numbers mt = getRandomNumbers();
+    if (con == NounConjugateType.nom && mt == Numbers.single) {
+      mt = Numbers.multi;
     }
-    SexType st = word.sex;
-    String correctWord = getNounConjugate(word, con, mt, st);
-    List<String> words = getRandomConjugated(word, st);
+    SexType st = noun.sex;
+    String correctNoun = getNounConjugate(noun, con, mt, st);
+    List<String> nouns = getRandomConjugated(noun, st);
     bool answered = false;
-    if (!words.contains(correctWord)) {
-      words.removeAt(0);
-      words.add(correctWord);
-      words.shuffle();
+    if (!nouns.contains(correctNoun)) {
+      nouns.removeAt(0);
+      nouns.add(correctNoun);
+      nouns.shuffle();
     }
-    words.shuffle();
+    nouns.shuffle();
 
     return Scaffold(
       appBar: AppBar(
@@ -107,7 +110,7 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    word.la,
+                    noun.la,
                     style: const TextStyle(
                       fontSize: 48,
                       color: Colors.black,
@@ -115,7 +118,7 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                     ),
                   ),
                   Text(
-                    word.en,
+                    noun.en,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black54,
@@ -128,9 +131,9 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               stringToIcon("性：${sexTypeToString(st)}", style: StyleType.info),
               const SizedBox(width: 20),
-              stringToIcon("格変化：${word.num}", style: StyleType.info),
+              stringToIcon("格変化：${noun.num}", style: StyleType.info),
               const SizedBox(width: 20),
-              stringToIcon("$currentIdx/${currentWordData.length}",
+              stringToIcon("$currentIdx/${currentNounData.length}",
                   style: StyleType.info),
             ]),
             const SizedBox(height: 20),
@@ -167,7 +170,7 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                         child: Container(
                           width: 100,
                           height: 50,
-                          color: mt == MultiType.single &&
+                          color: mt == Numbers.single &&
                                   con == NounConjugateType.nom
                               ? Colors.lightGreenAccent[400]
                               : Colors.grey[800],
@@ -177,10 +180,10 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                           child: Container(
                         width: 100,
                         height: 50,
-                        color: mt == MultiType.multi &&
-                                con == NounConjugateType.nom
-                            ? Colors.lightGreenAccent[400]
-                            : Colors.grey[800],
+                        color:
+                            mt == Numbers.multi && con == NounConjugateType.nom
+                                ? Colors.lightGreenAccent[400]
+                                : Colors.grey[800],
                       )),
                       const TableCell(
                           child: SizedBox(
@@ -198,19 +201,19 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                           child: Container(
                         width: 100,
                         height: 50,
-                        color: mt == MultiType.single &&
-                                con == NounConjugateType.gen
-                            ? Colors.lightGreenAccent[400]
-                            : Colors.grey[800],
+                        color:
+                            mt == Numbers.single && con == NounConjugateType.gen
+                                ? Colors.lightGreenAccent[400]
+                                : Colors.grey[800],
                       )),
                       TableCell(
                           child: Container(
                         width: 100,
                         height: 50,
-                        color: mt == MultiType.multi &&
-                                con == NounConjugateType.gen
-                            ? Colors.lightGreenAccent[400]
-                            : Colors.grey[800],
+                        color:
+                            mt == Numbers.multi && con == NounConjugateType.gen
+                                ? Colors.lightGreenAccent[400]
+                                : Colors.grey[800],
                       )),
                       const TableCell(
                           child: SizedBox(
@@ -228,19 +231,19 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                           child: Container(
                         width: 100,
                         height: 50,
-                        color: mt == MultiType.single &&
-                                con == NounConjugateType.dat
-                            ? Colors.lightGreenAccent[400]
-                            : Colors.grey[800],
+                        color:
+                            mt == Numbers.single && con == NounConjugateType.dat
+                                ? Colors.lightGreenAccent[400]
+                                : Colors.grey[800],
                       )),
                       TableCell(
                           child: Container(
                         width: 100,
                         height: 50,
-                        color: mt == MultiType.multi &&
-                                con == NounConjugateType.dat
-                            ? Colors.lightGreenAccent[400]
-                            : Colors.grey[800],
+                        color:
+                            mt == Numbers.multi && con == NounConjugateType.dat
+                                ? Colors.lightGreenAccent[400]
+                                : Colors.grey[800],
                       )),
                       const TableCell(
                           child: SizedBox(
@@ -256,20 +259,19 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                       child: Container(
                         width: 100,
                         height: 50,
-                        color: mt == MultiType.single &&
-                                con == NounConjugateType.acc
-                            ? Colors.lightGreenAccent[400]
-                            : Colors.grey[800],
+                        color:
+                            mt == Numbers.single && con == NounConjugateType.acc
+                                ? Colors.lightGreenAccent[400]
+                                : Colors.grey[800],
                       ),
                     ),
                     TableCell(
                         child: Container(
                       width: 100,
                       height: 50,
-                      color:
-                          mt == MultiType.multi && con == NounConjugateType.acc
-                              ? Colors.lightGreenAccent[400]
-                              : Colors.grey[800],
+                      color: mt == Numbers.multi && con == NounConjugateType.acc
+                          ? Colors.lightGreenAccent[400]
+                          : Colors.grey[800],
                     )),
                     const TableCell(
                         child: SizedBox(
@@ -285,7 +287,7 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                       width: 100,
                       height: 50,
                       color:
-                          mt == MultiType.single && con == NounConjugateType.abl
+                          mt == Numbers.single && con == NounConjugateType.abl
                               ? Colors.lightGreenAccent[400]
                               : Colors.grey[800],
                     )),
@@ -293,10 +295,9 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                         child: Container(
                       width: 100,
                       height: 50,
-                      color:
-                          mt == MultiType.multi && con == NounConjugateType.abl
-                              ? Colors.lightGreenAccent[400]
-                              : Colors.grey[800],
+                      color: mt == Numbers.multi && con == NounConjugateType.abl
+                          ? Colors.lightGreenAccent[400]
+                          : Colors.grey[800],
                     )),
                     const TableCell(
                         child: SizedBox(
@@ -313,12 +314,12 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                         spacing: 8.0, // ボタン間のスペース
                         runSpacing: 8.0, // 行間のスペース
                         children: List.generate(
-                          words.length,
+                          nouns.length,
                           (index) => ElevatedButton(
                               // TODO: answeredのボタンごとの個別化
                               onPressed: () {
                                 answered = true;
-                                if (words[index] == correctWord) {
+                                if (nouns[index] == correctNoun) {
                                   Future.delayed(
                                       const Duration(milliseconds: 500), () {
                                     setState(() {});
@@ -330,7 +331,7 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                                       (states) {
                                 if (!answered) {
                                   return Colors.white70;
-                                } else if (words[index] == correctWord) {
+                                } else if (nouns[index] == correctNoun) {
                                   // 正解の場合は薄緑色の背景に緑の枠を適用
                                   return Colors.lightGreenAccent;
                                   // 不正解のボタンを選んでいたら灰色
@@ -338,7 +339,7 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
                                   return Colors.grey.shade700;
                                 }
                               })),
-                              child: Text(words[index],
+                              child: Text(nouns[index],
                                   style: const TextStyle(
                                       color: Colors.black, fontSize: 18))),
                         )))),

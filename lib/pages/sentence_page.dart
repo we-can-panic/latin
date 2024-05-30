@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:latin/models/tag.dart';
+import 'package:latin/models/meta_utils.dart';
 import "components.dart";
 import "sentence_logic.dart";
 
@@ -87,6 +87,7 @@ class _SentenceQuestionState extends State<SentenceQuestion> {
             stringToIcon("$currentIdx/${currentSentenceData.length}",
                 style: StyleType.info),
             const SizedBox(height: 50),
+            // selected
             SingleChildScrollView(
                 child: Center(
                     child: Wrap(
@@ -97,16 +98,18 @@ class _SentenceQuestionState extends State<SentenceQuestion> {
                           (index) => ElevatedButton(
                               onPressed: () {
                                 setState(() {
-                                  candidateWords.add(selectedWords[index]);
+                                  NounOrVerb nv = selectedWords[index];
                                   selectedWords.removeAt(index);
+                                  candidateWords.add(nv);
                                 });
                               },
-                              child: Text(selectedWords[index].la,
+                              child: Text(getQuestion(selectedWords[index]),
                                   style: const TextStyle(fontSize: 18))),
                         )))),
             const SizedBox(height: 20),
             const Divider(),
             const SizedBox(height: 20),
+            // candidate
             SingleChildScrollView(
                 child: Center(
                     child: Wrap(
@@ -117,23 +120,34 @@ class _SentenceQuestionState extends State<SentenceQuestion> {
                           (index) => ElevatedButton(
                               onPressed: () {
                                 setState(() {
-                                  selectedWords.add(candidateWords[index]);
+                                  NounOrVerb nv = candidateWords[index];
                                   candidateWords.removeAt(index);
+                                  selectedWords.add(nv);
                                 });
                               },
-                              child: Text(candidateWords[index].la,
+                              child: Text(getQuestion(candidateWords[index]),
                                   style: const TextStyle(
                                       color: Colors.black, fontSize: 18))),
                         )))),
             const Expanded(child: SizedBox()),
             ElevatedButton(
               onPressed: () {
-                Set<String> selected =
-                    Set<String>.from(selectedWords.map((w) => w.la));
-                Set<String> correct =
-                    Set<String>.from(sentence.wordComponents.map((w) => w.la));
-                if (selected.containsAll(correct) &&
-                    correct.containsAll(selected)) {
+                Set<int> selectedNounIds = Set<int>.from(selectedWords
+                    .where((w) => w.type == WordType.noun)
+                    .map((w) => candidateNouns[w.idx].idx));
+                Set<int> correctNounIds =
+                    Set<int>.from(sentence.nounComponents.map((w) => w.idx));
+
+                Set<int> selectedVerbIds = Set<int>.from(selectedWords
+                    .where((w) => w.type == WordType.verb)
+                    .map((w) => candidateVerbs[w.idx].idx));
+                Set<int> correctVerbIds =
+                    Set<int>.from(sentence.verbComponents.map((w) => w.idx));
+
+                if (selectedNounIds.containsAll(correctNounIds) &&
+                    correctNounIds.containsAll(selectedNounIds) &&
+                    selectedVerbIds.containsAll(correctVerbIds) &&
+                    correctVerbIds.containsAll(selectedVerbIds)) {
                   setState(() {
                     moveNext();
                   });

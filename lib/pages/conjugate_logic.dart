@@ -1,45 +1,46 @@
-import 'package:latin/models/word.dart';
-import 'package:latin/models/tag.dart';
+import 'package:latin/models/noun.dart';
+import 'package:latin/models/meta_utils.dart';
+import 'package:latin/models/noun_utils.dart';
 
 int currentIdx = 0;
-List<Word> currentWordData = []; // Conjugateの条件のみを抜き出したwordData
+List<Noun> currentNounData = []; // Conjugateの条件のみを抜き出したnounData
 
 List<String> currentTagData = tagData.values.toList();
 List<String> currentNumData = numList;
 
 // 各種値をリセットし整合性の結果を返す
-bool resetCurrentWordData() {
+bool resetCurrentNounData() {
   currentIdx = 0;
-  currentWordData = filterWordData(wordData, currentTagData, currentNumData);
-  currentWordData.shuffle();
-  // 整合性: currentWordDataが0でないこと
-  return currentWordData.isNotEmpty;
+  currentNounData = filterNounData(nounData, currentTagData, currentNumData);
+  currentNounData.shuffle();
+  // 整合性: currentNounDataが0でないこと
+  return currentNounData.isNotEmpty;
 }
 
 // 次の単語を返す
-Word getNextWord() {
-  if (currentWordData.isEmpty) {
-    return Word(
-        la: "", en: "", type: WordType.noun, num: "", sex: SexType.m, idx: 0);
+Noun getNextNoun() {
+  if (currentNounData.isEmpty) {
+    return Noun(
+        la: "", en: "", type: NounType.noun, num: "", sex: SexType.m, idx: 0);
   }
-  if (currentIdx < currentWordData.length) {
-    Word result = currentWordData[currentIdx];
+  if (currentIdx < currentNounData.length) {
+    Noun result = currentNounData[currentIdx];
     currentIdx++;
     return result;
   } else {
     currentIdx = 0;
-    return getNextWord();
+    return getNextNoun();
   }
 }
 
-List<Word> filterWordData(List<Word> wordData, List<String> currentTagData,
+List<Noun> filterNounData(List<Noun> nounData, List<String> currentTagData,
     List<String> activeNumData) {
-  List<Word> result = wordData;
+  List<Noun> result = nounData;
 
   bool addEmpty = currentTagData.contains("タグなし");
   Set<String> tagSet = currentTagData.toSet();
   result = result.where((item) {
-    Set<String> currentTagSets = getTag(item).toSet();
+    Set<String> currentTagSets = getNounTag(item).toSet();
     if (addEmpty && currentTagSets.isEmpty) {
       return true;
     } else if (tagSet.intersection(currentTagSets).isNotEmpty) {

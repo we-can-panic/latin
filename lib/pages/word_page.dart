@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:latin/models/word.dart';
-import 'package:latin/models/tag.dart';
+import 'package:latin/models/noun.dart';
+import 'package:latin/models/noun_utils.dart';
+import 'package:latin/models/meta_utils.dart';
 import "components.dart";
 import "word_logic.dart";
 
@@ -25,7 +26,7 @@ Column wordStartDivision(BuildContext context) {
     const SizedBox(height: 20),
     ElevatedButton(
       onPressed: () {
-        bool result = resetCurrentWordData();
+        bool result = resetCurrentNounData();
         if (!result) {
           showAlertDialog(context, "エラー!", "条件に合うワードはありません。絞り込みの設定を見直してみてください");
         } else {
@@ -60,13 +61,13 @@ class _WordQuestionState extends State<WordQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    Word word = getNextWord();
+    Noun word = getNextNoun();
     bool answered = false;
-    List<Word> candidateWords = getRandomWords();
-    if (!candidateWords.map((item) => item.en).contains(word.en)) {
-      candidateWords[0] = word;
+    List<Noun> candidateNouns = getRandomNouns();
+    if (!candidateNouns.map((item) => item.en).contains(word.en)) {
+      candidateNouns[0] = word;
     }
-    candidateWords
+    candidateNouns
         .sort((a, b) => toAnswer(a).compareTo(toAnswer(b))); // アルファベット順にソート
 
     return Scaffold(
@@ -102,7 +103,7 @@ class _WordQuestionState extends State<WordQuestion> {
               ),
             ),
             const SizedBox(height: 20),
-            stringToIcon("$currentIdx/${currentWordData.length}",
+            stringToIcon("$currentIdx/${currentNounData.length}",
                 style: StyleType.info),
             const SizedBox(height: 20),
             SingleChildScrollView(
@@ -111,12 +112,12 @@ class _WordQuestionState extends State<WordQuestion> {
                         spacing: 8.0, // ボタン間のスペース
                         runSpacing: 8.0, // 行間のスペース
                         children: List.generate(
-                          candidateWords.length,
+                          candidateNouns.length,
                           (index) => ElevatedButton(
                               // TODO: answeredのボタンごとの個別化
                               onPressed: () {
                                 answered = true;
-                                if (candidateWords[index].en == word.en) {
+                                if (candidateNouns[index].en == word.en) {
                                   Future.delayed(
                                       const Duration(milliseconds: 500), () {
                                     setState(() {});
@@ -128,7 +129,7 @@ class _WordQuestionState extends State<WordQuestion> {
                                       (states) {
                                 if (!answered) {
                                   return Colors.white70;
-                                } else if (candidateWords[index].en ==
+                                } else if (candidateNouns[index].en ==
                                     word.en) {
                                   // 正解の場合は薄緑色の背景に緑の枠を適用
                                   return Colors.lightGreenAccent;
@@ -137,7 +138,7 @@ class _WordQuestionState extends State<WordQuestion> {
                                   return Colors.grey.shade700;
                                 }
                               })),
-                              child: Text(toAnswer(candidateWords[index]),
+                              child: Text(toAnswer(candidateNouns[index]),
                                   style: const TextStyle(
                                       color: Colors.black, fontSize: 18))),
                         )))),
