@@ -1,77 +1,36 @@
-// メタデータクラス
-import 'package:latin/models/word.dart';
+import "package:latin/database/database.dart";
 
-class WordMeta {
-  int wordIdx;
+// --
+
+Map<int, String> tagData = {};
+
+// --
+
+class Meta {
   List<int> score;
   List<String> tags;
 
-  WordMeta({required this.wordIdx, required this.tags, required this.score});
+  Meta({required this.score, required this.tags});
 
-  // 連想配列からロード
-  factory WordMeta.fromJson(Map<String, dynamic> json,
-      {required Map<int, String> tag}) {
-    return WordMeta(
-      wordIdx: json["wordIdx"],
-      score: json["score"].cast<int>(),
-      tags: json["tags"]
-          .cast<int>()
-          .map((tagId) => tag[tagId])
-          .cast<String>()
-          .toList(),
+  factory Meta.fromJson(Map<String, dynamic> json) {
+    return Meta(
+      score: json["score"].split(";").map((s) => int.parse(s)).toList(),
+      tags: json["tags"].split(";").map((s) => tagData[int.parse(s)]).toList(),
     );
   }
 }
 
-class NounMeta extends WordMeta {
-  NounMeta({required super.wordIdx, required super.tags, required super.score});
+// --
 
-  factory NounMeta.fromWord(WordMeta wm) {
-    return NounMeta(wordIdx: wm.wordIdx, tags: wm.tags, score: wm.score);
-  }
-
-  // 連想配列からロード
-  @override
-  factory NounMeta.fromJson(Map<String, dynamic> json,
-      {required Map<int, String> tag}) {
-    return NounMeta.fromWord(WordMeta.fromJson(json, tag: tag));
-  }
-}
-
-class VerbMeta extends WordMeta {
-  VerbMeta({required super.wordIdx, required super.tags, required super.score});
-
-  factory VerbMeta.fromWord(WordMeta wm) {
-    return VerbMeta(wordIdx: wm.wordIdx, tags: wm.tags, score: wm.score);
-  }
-
-  // 連想配列からロード
-  @override
-  factory VerbMeta.fromJson(Map<String, dynamic> json,
-      {required Map<int, String> tag}) {
-    return VerbMeta.fromWord(WordMeta.fromJson(json, tag: tag));
-  }
-}
-
-class SentenceMeta {
-  int sentenceIdx;
-  List<int> score;
-  List<String> tags;
-
-  SentenceMeta(
-      {required this.sentenceIdx, required this.tags, required this.score});
-
-  // 連想配列からロード
-  factory SentenceMeta.fromJson(Map<String, dynamic> json,
-      {required Map<int, String> tag}) {
-    return SentenceMeta(
-      sentenceIdx: json["sentenceIdx"],
-      score: json["score"].cast<int>(),
-      tags: json["tags"]
-          .cast<int>()
-          .map((tagId) => tag[tagId])
-          .cast<String>()
-          .toList(),
-    );
-  }
+Future<void> loadTagData() async {
+  final client = await db.database;
+  // 全取得する SQL を実行
+  List<Map<String, dynamic>> results =
+      await client.rawQuery("select id, name from $tagTable");
+  // 取得した結果から WTR モデルのリストとして作成
+  results.map((row) {
+    int id = row["id"];
+    String name = row["string"];
+    tagData[id] = name;
+  });
 }

@@ -1,4 +1,5 @@
 import 'dart:math';
+import "meta.dart";
 // Noun, verbともに共通のクラス
 
 class Word {
@@ -6,12 +7,14 @@ class Word {
   String en;
   String num;
   int idx;
+  Meta meta;
 
   Word(
       {required this.la,
       required this.en,
       required this.num,
-      required this.idx});
+      required this.idx,
+      required this.meta});
 }
 
 // 数: 単数、複数

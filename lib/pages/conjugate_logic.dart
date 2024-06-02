@@ -1,6 +1,6 @@
 import 'package:latin/models/noun.dart';
-import 'package:latin/models/meta_utils.dart';
-import 'package:latin/models/noun_utils.dart';
+import 'package:latin/models/meta.dart';
+import 'package:latin/models/noun.dart';
 
 int currentIdx = 0;
 List<Noun> currentNounData = []; // Conjugateの条件のみを抜き出したnounData
@@ -21,7 +21,13 @@ bool resetCurrentNounData() {
 Noun getNextNoun() {
   if (currentNounData.isEmpty) {
     return Noun(
-        la: "", en: "", type: NounType.noun, num: "", sex: SexType.m, idx: 0);
+        la: "",
+        en: "",
+        type: NounType.noun,
+        num: "",
+        sex: SexType.m,
+        idx: 0,
+        meta: Meta(score: [], tags: []));
   }
   if (currentIdx < currentNounData.length) {
     Noun result = currentNounData[currentIdx];
@@ -40,7 +46,7 @@ List<Noun> filterNounData(List<Noun> nounData, List<String> currentTagData,
   bool addEmpty = currentTagData.contains("タグなし");
   Set<String> tagSet = currentTagData.toSet();
   result = result.where((item) {
-    Set<String> currentTagSets = getNounTag(item).toSet();
+    Set<String> currentTagSets = item.meta.tags.toSet();
     if (addEmpty && currentTagSets.isEmpty) {
       return true;
     } else if (tagSet.intersection(currentTagSets).isNotEmpty) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:latin/models/meta_utils.dart';
+import 'package:latin/models/meta.dart';
 import "components.dart";
 import "sentence_logic.dart";
 
@@ -134,15 +134,15 @@ class _SentenceQuestionState extends State<SentenceQuestion> {
               onPressed: () {
                 Set<int> selectedNounIds = Set<int>.from(selectedWords
                     .where((w) => w.type == WordType.noun)
-                    .map((w) => candidateNouns[w.idx].idx));
-                Set<int> correctNounIds =
-                    Set<int>.from(sentence.nounComponents.map((w) => w.idx));
+                    .map((w) => candidateNouns[w.idx].noun.idx));
+                Set<int> correctNounIds = Set<int>.from(
+                    sentence.nounComponents.map((w) => w.noun.idx));
 
                 Set<int> selectedVerbIds = Set<int>.from(selectedWords
                     .where((w) => w.type == WordType.verb)
-                    .map((w) => candidateVerbs[w.idx].idx));
-                Set<int> correctVerbIds =
-                    Set<int>.from(sentence.verbComponents.map((w) => w.idx));
+                    .map((w) => candidateVerbs[w.idx].verb.idx));
+                Set<int> correctVerbIds = Set<int>.from(
+                    sentence.verbComponents.map((w) => w.verb.idx));
 
                 if (selectedNounIds.containsAll(correctNounIds) &&
                     correctNounIds.containsAll(selectedNounIds) &&

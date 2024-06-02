@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:latin/models/word.dart';
 import 'package:latin/models/noun.dart';
-import 'package:latin/models/noun_utils.dart';
-import 'package:latin/models/meta_utils.dart';
-import 'package:latin/models/noun.dart';
+import 'package:latin/models/meta.dart';
 import "components.dart";
 import "conjugate_logic.dart";
 
@@ -78,8 +76,8 @@ class _ConjugateQuestionState extends State<ConjugateQuestion> {
       mt = Numbers.multi;
     }
     SexType st = noun.sex;
-    String correctNoun = getNounConjugate(noun, con, mt, st);
-    List<String> nouns = getRandomConjugated(noun, st);
+    String correctNoun = noun.conjugate(con, mt);
+    List<String> nouns = getRandomConjugated(noun);
     bool answered = false;
     if (!nouns.contains(correctNoun)) {
       nouns.removeAt(0);
