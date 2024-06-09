@@ -126,8 +126,7 @@ class _SentenceQuestionState extends State<SentenceQuestion> {
                                 });
                               },
                               child: Text(getQuestion(candidateWords[index]),
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 18))),
+                                  style: const TextStyle(fontSize: 18))),
                         )))),
             const Expanded(child: SizedBox()),
             ElevatedButton(

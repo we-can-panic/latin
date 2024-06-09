@@ -43,6 +43,7 @@ dependencies:
   file_selector: ^1.0.3
   file_picker: ^8.0.3
   permission_handler: ^11.3.1
+  csv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -71,7 +72,14 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
-  # assets:
+  assets:
+    - assets/meta.csv
+    - assets/noun.csv
+    - assets/nounComponent.csv
+    - assets/sentence.csv
+    - assets/tag.csv
+    - assets/verb.csv
+    - assets/verbComponent.csv
   #   - assets/noun.json
   #   - assets/noun_meta.json
   #   - assets/verb.json

@@ -1,0 +1,22 @@
+id,la,en,nounComponents,verbComponents
+1,Disciplus est vir,The student is a man.,10;5,7
+2,Puella librum legit.,The girl reads a book.,1;2,1
+3,Puer canem suum amat.,The boy loves his dog.,3;4;28,2
+4,Vir epistulam scribit.,The man writes a letter.,5;6,3
+5,Femina carmen cantat.,The woman sings a song.,7;8,4
+6,Magister discipulos docet.,The teacher teaches the students.,9;5,5
+7,Sol in oriente oritur.,The sun rises in the east.,11;12,6
+8,Urbs pulchra est.,The city is beautiful.,13;14,7
+9,Agricola in agro laborat.,The farmer works in the field.,15;16;29,8
+10,Pueri in horto ludunt.,The children play in the garden.,3;29;17,9
+11,Mater cenam coquit.,The mother cooks dinner.,18;19,10
+12,Canis celeriter currit.,The dog runs quickly.,4;30,11
+13,Feles in lecto dormit.,The cat sleeps on the bed.,31;29;32,12
+14,Discipuli librum legunt.,The students read the book.,10;2,13
+15,Pater domum aedificat.,The father builds a house.,33;34,14
+16,Avis in caelo volat.,The bird flies in the sky.,35;29;36,15
+17,Rex regnum regit.,The king rules the country.,23;37,16
+18,Milites fortiter pugnant.,The soldiers fight bravely.,24;38,17
+19,Flumen per urbem fluit.,The river flows through the city.,21;39;42,18
+20,Stellae nocte lucent.,The stars shine at night.,25;40,19
+21,Equus aquam bibit.,The horse drinks water.,20;41,20

@@ -9,7 +9,7 @@ const List<String> numList = ["1", "2", "3", "3i"];
 // --
 
 // 単語タイプ
-enum NounType { noun, verb, adjective }
+enum NounType { noun, adjective }
 
 // 単語活用タイプ
 enum NounConjugateType { nom, gen, dat, acc, abl }
@@ -350,6 +350,23 @@ Future<void> loadNounData() async {
     where $metaTable.kind = 'noun';
   ''');
 
+  int stringToIntWithDefault(String str, {int defaultValue = 0}) {
+    try {
+      return int.parse(str);
+    } catch (e) {
+      return defaultValue;
+    }
+  }
+
+  String getTagDataWithDefault(int id) {
+    final result = tagData[id];
+    if (result == null) {
+      return "";
+    } else {
+      return result;
+    }
+  }
+
   // 取得した結果から WTR モデルのリストとして作成
   nounData = results
       .map((row) => Noun(
@@ -360,10 +377,12 @@ Future<void> loadNounData() async {
             num: row["num"],
             sex: SexType.values[row["sex"]],
             meta: Meta(
-              score: row["score"].split(";").map((s) => int.parse(s)).toList(),
-              tags: row["tags"]
-                  .split(";")
-                  .map((s) => tagData[int.parse(s)])
+              score: List<String>.from(row["score"].split(";"))
+                  .map((s) => stringToIntWithDefault(s))
+                  .toList(),
+              tags: List<String>.from(row["tags"].split(";"))
+                  // .map((s) => tagData[stringToIntWithDefault(s)]!)
+                  .map((s) => getTagDataWithDefault(stringToIntWithDefault(s)))
                   .toList(),
             ),
           ))
@@ -373,7 +392,6 @@ Future<void> loadNounData() async {
 NounType nounTypeFromString(String nounType) {
   Map<String, NounType> wordMap = {
     "noun": NounType.noun,
-    "verb": NounType.verb,
     "adjective": NounType.adjective
   };
   NounType? result = wordMap[NounType];

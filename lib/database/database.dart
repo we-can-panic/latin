@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:csv/csv.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 AppDatabase db = AppDatabase();
 
@@ -20,7 +25,7 @@ class AppDatabase {
   Future open() async {
     return await openDatabase(
       join(await getDatabasesPath(), "latin.db"),
-      version: 2,
+      version: 1,
       // データベース作成時処理
       onCreate: (db, version) async => await createDatabase(db, version),
     );
@@ -89,7 +94,52 @@ create table $tagTable (
   id integer primary key autoincrement,
   name text not null
 )''');
+
+    await registData(db);
   }
 
   Future<void> getAll(Database db, int version) async {}
+}
+
+// 登録
+Future<void> registData(Database db) async {
+  List<String> files = [
+    metaTable,
+    nounTable,
+    nounComponentTable,
+    sentenceTable,
+    tagTable,
+    verbTable,
+    verbComponentTable,
+  ];
+
+  const csvToListConverter = CsvToListConverter();
+
+  for (var tableName in files) {
+    // CSVファイルを読み込み
+    // final input = File("assets/$tableName.csv").openRead();
+    // final fields = await input
+    //     .transform(utf8.decoder)
+    //     .transform(const CsvToListConverter())
+    //     .toList();
+
+    final input = await rootBundle.loadString("assets/$tableName.csv");
+    final fields = csvToListConverter.convert(input);
+
+    // 最初の行はカラム名
+    // final columnNames = fields.first;
+    final List<String> columnNames = List<String>.from(fields.first);
+
+    final dataRows = fields.skip(1);
+
+    // データ一括挿入
+    await db.transaction((txn) async {
+      final batch = txn.batch();
+      for (var row in dataRows) {
+        final rowMap = Map<String, dynamic>.fromIterables(columnNames, row);
+        batch.insert(tableName, rowMap);
+      }
+      await batch.commit(noResult: true);
+    });
+  }
 }

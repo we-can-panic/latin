@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:latin/database/database.dart";
 
 // --
@@ -28,9 +29,9 @@ Future<void> loadTagData() async {
   List<Map<String, dynamic>> results =
       await client.rawQuery("select id, name from $tagTable");
   // 取得した結果から WTR モデルのリストとして作成
-  results.map((row) {
+  for (var row in results) {
     int id = row["id"];
-    String name = row["string"];
+    String name = row["name"];
     tagData[id] = name;
-  });
+  }
 }

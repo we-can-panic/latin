@@ -99,6 +99,7 @@ List<Sentence> filterSentenceData(
   Set<String> tagSet = currentTagData.toSet();
   result = result.where((item) {
     Set<String> currentTagSets = item.meta.tags.toSet();
+    currentTagSets.remove("");
     if (addEmpty && currentTagSets.isEmpty) {
       return true;
     } else if (tagSet.intersection(currentTagSets).isNotEmpty) {

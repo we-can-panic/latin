@@ -61,6 +61,23 @@ Future<void> loadVerbData() async {
     where $metaTable.kind = 'verb';
   ''');
 
+  int stringToIntWithDefault(String str, {int defaultValue = 0}) {
+    try {
+      return int.parse(str);
+    } catch (e) {
+      return defaultValue;
+    }
+  }
+
+  String getTagDataWithDefault(int id) {
+    final result = tagData[id];
+    if (result == null) {
+      return "";
+    } else {
+      return result;
+    }
+  }
+
   // 取得した結果から WTR モデルのリストとして作成
   verbData = results
       .map((row) => Verb(
@@ -69,10 +86,12 @@ Future<void> loadVerbData() async {
             en: row["en"],
             num: row["num"],
             meta: Meta(
-              score: row["score"].split(";").map((s) => int.parse(s)).toList(),
-              tags: row["tags"]
-                  .split(";")
-                  .map((s) => tagData[int.parse(s)])
+              score: List<String>.from(row["score"].split(";"))
+                  .map((s) => stringToIntWithDefault(s))
+                  .toList(),
+              tags: List<String>.from(row["tags"].split(";"))
+                  // .map((s) => tagData[stringToIntWithDefault(s)]!)
+                  .map((s) => getTagDataWithDefault(stringToIntWithDefault(s)))
                   .toList(),
             ),
           ))

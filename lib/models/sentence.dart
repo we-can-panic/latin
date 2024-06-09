@@ -1,3 +1,7 @@
+import 'dart:ffi';
+
+import 'package:latin/models/word.dart';
+
 import "../database/database.dart";
 import 'noun.dart';
 import 'verb.dart';
@@ -71,14 +75,14 @@ Future<void> loadSentenceData() async {
   ''');
 
   List<Map<String, dynamic>> nounComponentResults = await dbclient.rawQuery('''
-    select id, nounId, conjugate, Number from $nounComponentTable
+    select id, nounId, conjugate, number from $nounComponentTable
   ''');
   Map<int, NounComponent> nounComponentmap = {
     for (var row in nounComponentResults)
       row["id"]: NounComponent(
         noun: getNounById(row["nounId"]),
-        conjugateType: NounConjugateType.values[row["conjugateType"]],
-        num: row["num"],
+        conjugateType: NounConjugateType.values[row["conjugate"]],
+        num: Numbers.values[row["number"]],
       )
   };
 
@@ -93,27 +97,65 @@ Future<void> loadSentenceData() async {
         form: Form.values[row["form"]],
         tense: Tense.values[row["tense"]],
         person: Person.values[row["person"]],
-        num: row["number"],
+        num: Numbers.values[row["number"]],
       )
   };
+
+  int stringToIntWithDefault(String str, {int defaultValue = 0}) {
+    try {
+      return int.parse(str);
+    } catch (e) {
+      return defaultValue;
+    }
+  }
+
+  NounComponent getNounComponentWithDefault(int id) {
+    final result = nounComponentmap[id];
+    if (result == null) {
+      return nounComponentmap[0]!;
+    } else {
+      return result;
+    }
+  }
+
+  VerbComponent getVerbComponentWithDefault(int id) {
+    final result = verbComponentmap[id];
+    if (result == null) {
+      return verbComponentmap[0]!;
+    } else {
+      return result;
+    }
+  }
+
+  String getTagDataWithDefault(int id) {
+    final result = tagData[id];
+    if (result == null) {
+      return "";
+    } else {
+      return result;
+    }
+  }
 
   // 取得した結果から WTR モデルのリストとして作成
   sentenceData = results.map((row) {
     return Sentence(
-      idx: row["idx"],
+      idx: row["id"],
       la: row["la"],
       en: row["en"],
-      nounComponents: row["nounComponents"]
-          .split(";")
-          .map((s) => nounComponentmap[int.parse(s)])
+      nounComponents: List<String>.from(row["nounComponents"].split(";"))
+          .map((s) => getNounComponentWithDefault(stringToIntWithDefault(s)))
           .toList(),
-      verbComponents: row["verbComponents"]
-          .split(";")
-          .map((s) => verbComponentmap[int.parse(s)])
+      verbComponents: List<String>.from(row["verbComponents"].split(";"))
+          .map((s) => getVerbComponentWithDefault(stringToIntWithDefault(s)))
           .toList(),
       meta: Meta(
-        score: row["score"].split(";").map((s) => int.parse(s)).toList(),
-        tags: row["tags"].split(";").map((s) => tagData[int.parse(s)]).toList(),
+        score: List<String>.from(row["score"].split(";"))
+            .map((s) => stringToIntWithDefault(s))
+            .toList(),
+        tags: List<String>.from(row["tags"].split(";"))
+            // .map((s) => tagData[stringToIntWithDefault(s)]!)
+            .map((s) => getTagDataWithDefault(stringToIntWithDefault(s)))
+            .toList(),
       ),
     );
   }).toList();

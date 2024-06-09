@@ -1,6 +1,5 @@
 import 'package:latin/models/noun.dart';
 import 'package:latin/models/meta.dart';
-import 'package:latin/models/noun.dart';
 
 int currentIdx = 0;
 List<Noun> currentNounData = []; // Conjugateの条件のみを抜き出したnounData
