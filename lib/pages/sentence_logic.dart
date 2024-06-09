@@ -1,11 +1,10 @@
+import 'package:latin/models/nounComponent.dart';
+import 'package:latin/models/verbComponent.dart';
 import 'package:latin/models/word.dart';
 import 'package:latin/models/noun.dart';
-import 'package:latin/models/noun_utils.dart';
 import 'package:latin/models/verb.dart';
-import 'package:latin/models/verb_utils.dart';
 import 'package:latin/models/sentence.dart';
-import 'package:latin/models/sentence_utils.dart';
-import 'package:latin/models/meta_utils.dart';
+import 'package:latin/models/meta.dart';
 
 int currentIdx = 0;
 List<Sentence> currentSentenceData = [];
@@ -13,8 +12,8 @@ List<String> currentTagData = tagData.values.toList();
 bool questionByLa = false;
 
 Sentence sentence = getNextSentence();
-List<Noun> candidateNouns = getRandomNouns(num: 4);
-List<Verb> candidateVerbs = getRandomVerbs(num: 4);
+List<NounComponent> candidateNouns = getRandomNounComponents(num: 4);
+List<VerbComponent> candidateVerbs = getRandomVerbComponents(num: 4);
 List<NounOrVerb> candidateWords = []; // 未選択の単語
 List<NounOrVerb> selectedWords = []; // 選択済みの単語
 
@@ -30,10 +29,10 @@ String getQuestion(NounOrVerb nv) {
   Word word;
   switch (nv.type) {
     case WordType.verb:
-      word = candidateVerbs[nv.idx];
+      word = candidateVerbs[nv.idx].verb;
       break;
     case WordType.noun:
-      word = candidateNouns[nv.idx];
+      word = candidateNouns[nv.idx].noun;
       break;
   }
   if (questionByLa) {
@@ -55,9 +54,9 @@ bool resetCurrentSentenceData() {
 
 bool moveNext() {
   sentence = getNextSentence();
-  candidateNouns = getRandomNouns(num: 2);
+  candidateNouns = getRandomNounComponents(num: 2);
   candidateNouns.addAll(sentence.nounComponents);
-  candidateVerbs = getRandomVerbs(num: 2);
+  candidateVerbs = getRandomVerbComponents(num: 2);
   candidateVerbs.addAll(sentence.verbComponents);
   candidateWords = [];
   for (var i = 0; i < candidateNouns.length; i++) {
@@ -75,7 +74,12 @@ bool moveNext() {
 Sentence getNextSentence() {
   if (currentSentenceData.isEmpty) {
     return Sentence(
-        la: "", en: "", nounComponents: [], verbComponents: [], idx: 0);
+        la: "",
+        en: "",
+        nounComponents: [],
+        verbComponents: [],
+        idx: 0,
+        meta: Meta(score: [], tags: []));
   }
   if (currentIdx < currentSentenceData.length) {
     Sentence result = currentSentenceData[currentIdx];
@@ -94,7 +98,8 @@ List<Sentence> filterSentenceData(
   bool addEmpty = currentTagData.contains("タグなし");
   Set<String> tagSet = currentTagData.toSet();
   result = result.where((item) {
-    Set<String> currentTagSets = getSentenceTag(item).toSet();
+    Set<String> currentTagSets = item.meta.tags.toSet();
+    currentTagSets.remove("");
     if (addEmpty && currentTagSets.isEmpty) {
       return true;
     } else if (tagSet.intersection(currentTagSets).isNotEmpty) {

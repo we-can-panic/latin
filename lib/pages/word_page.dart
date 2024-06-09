@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latin/models/noun.dart';
-import 'package:latin/models/noun_utils.dart';
-import 'package:latin/models/meta_utils.dart';
+import 'package:latin/models/meta.dart';
 import "components.dart";
 import "word_logic.dart";
 
