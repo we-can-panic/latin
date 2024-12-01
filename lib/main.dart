@@ -5,17 +5,12 @@ import 'package:latin/pages/sentence_page.dart';
 import "package:latin/pages/conjugate_page.dart";
 import "package:latin/pages/word_page.dart";
 
-import 'package:latin/models/noun.dart';
-import 'package:latin/models/meta.dart';
-import 'package:latin/models/verb.dart';
-import 'package:latin/models/sentence.dart';
+import 'package:latin/apps/io.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await loadTagData();
-  await loadVerbData();
-  await loadNounData();
-  await loadSentenceData();
+  // DBからデータを読み込み
+  await loadAssets();
   runApp(const MyApp());
 }
 

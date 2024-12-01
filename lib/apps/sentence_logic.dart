@@ -1,14 +1,12 @@
 import 'package:latin/models/nounComponent.dart';
 import 'package:latin/models/verbComponent.dart';
-import 'package:latin/models/word.dart';
-import 'package:latin/models/noun.dart';
-import 'package:latin/models/verb.dart';
+import 'package:latin/apps/noun.dart';
+import 'package:latin/apps/verb.dart';
+import 'package:latin/apps/sentence.dart';
 import 'package:latin/models/sentence.dart';
-import 'package:latin/models/meta.dart';
 
 int currentIdx = 0;
 List<Sentence> currentSentenceData = [];
-List<String> currentTagData = tagData.values.toList();
 bool questionByLa = false;
 
 Sentence sentence = getNextSentence();
@@ -26,26 +24,28 @@ class NounOrVerb {
 }
 
 String getQuestion(NounOrVerb nv) {
-  Word word;
   switch (nv.type) {
     case WordType.verb:
-      word = candidateVerbs[nv.idx].verb;
-      break;
+      final verb = candidateVerbs[nv.idx].verb;
+      if (questionByLa) {
+        return verb.en;
+      } else {
+        return verb.la;
+      }
     case WordType.noun:
-      word = candidateNouns[nv.idx].noun;
-      break;
-  }
-  if (questionByLa) {
-    return word.en;
-  } else {
-    return word.la;
+      final noun = candidateNouns[nv.idx].noun;
+      if (questionByLa) {
+        return noun.en;
+      } else {
+        return noun.la;
+      }
   }
 }
 
 // 各種値をリセットし整合性の結果を返す
 bool resetCurrentSentenceData() {
   currentIdx = 0;
-  currentSentenceData = filterSentenceData(sentenceData, currentTagData);
+  currentSentenceData = sentenceData;
   currentSentenceData.shuffle();
   moveNext();
   // 整合性: currentSentenceDataが0でないこと
@@ -73,13 +73,7 @@ bool moveNext() {
 // 次の単語を返す
 Sentence getNextSentence() {
   if (currentSentenceData.isEmpty) {
-    return Sentence(
-        la: "",
-        en: "",
-        nounComponents: [],
-        verbComponents: [],
-        idx: 0,
-        meta: Meta(score: [], tags: []));
+    return defaultSentence;
   }
   if (currentIdx < currentSentenceData.length) {
     Sentence result = currentSentenceData[currentIdx];
@@ -89,27 +83,6 @@ Sentence getNextSentence() {
     currentIdx = 0;
     return getNextSentence();
   }
-}
-
-List<Sentence> filterSentenceData(
-    List<Sentence> sentenceData, List<String> currentTagData) {
-  List<Sentence> result = sentenceData;
-
-  bool addEmpty = currentTagData.contains("タグなし");
-  Set<String> tagSet = currentTagData.toSet();
-  result = result.where((item) {
-    Set<String> currentTagSets = item.meta.tags.toSet();
-    currentTagSets.remove("");
-    if (addEmpty && currentTagSets.isEmpty) {
-      return true;
-    } else if (tagSet.intersection(currentTagSets).isNotEmpty) {
-      return true;
-    } else {
-      return false;
-    }
-  }).toList();
-
-  return result;
 }
 
 List<Sentence> getRandomSentences() {

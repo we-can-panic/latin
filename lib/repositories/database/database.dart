@@ -1,10 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 AppDatabase db = AppDatabase();
 
@@ -14,8 +11,6 @@ const String nounComponentTable = "nounComponent";
 const String verbComponentTable = "verbComponent";
 const String nounTable = "noun";
 const String verbTable = "verb";
-const String metaTable = "meta";
-const String tagTable = "tag";
 
 class AppDatabase {
   Database? _db;
@@ -23,6 +18,7 @@ class AppDatabase {
   Future<Database> get database async => _db ??= await open();
 
   Future open() async {
+    // databaseFactory = databaseFactoryFfi;
     return await openDatabase(
       join(await getDatabasesPath(), "latin.db"),
       version: 1,
@@ -46,8 +42,8 @@ create table $sentenceTable (
 create table $nounComponentTable (
   id integer primary key autoincrement,
   nounId integer not null,
-  conjugate integer not null,
-  number integer not null,
+  nounCase integer not null,
+  num integer not null,
   foreign key (nounId)
     references Source ($nounTable)
     on delete cascade
@@ -56,11 +52,11 @@ create table $nounComponentTable (
 create table $verbComponentTable (
   id integer primary key autoincrement,
   verbId integer not null,
-  number integer not null,
   mode integer not null,
   form integer not null,
   tense integer not null,
   person integer not null,
+  num integer not null,
   foreign key (verbId)
     references Source ($verbTable)
     on delete cascade
@@ -70,8 +66,8 @@ create table $nounTable (
   id integer primary key autoincrement,
   la text not null,
   en text not null,
-  num text not null,
   nounType integer not null,
+  conjugateType integer not null,
   sex integer not null
 )''');
     await db.execute('''
@@ -79,36 +75,25 @@ create table $verbTable (
   id integer primary key autoincrement,
   la text not null,
   en text not null,
-  num text not null
-)''');
-    await db.execute('''
-create table $metaTable (
-  id integer primary key autoincrement,
-  kind text not null,
-  rowId integer not null,
-  score text,
-  tags text
-)''');
-    await db.execute('''
-create table $tagTable (
-  id integer primary key autoincrement,
-  name text not null
+  conjugateType integer not null
 )''');
 
     await registData(db);
   }
 
   Future<void> getAll(Database db, int version) async {}
+
+  insert(String table, map) async {
+    (await database).insert(table, map);
+  }
 }
 
 // 登録
 Future<void> registData(Database db) async {
   List<String> files = [
-    metaTable,
     nounTable,
     nounComponentTable,
     sentenceTable,
-    tagTable,
     verbTable,
     verbComponentTable,
   ];
@@ -116,22 +101,14 @@ Future<void> registData(Database db) async {
   const csvToListConverter = CsvToListConverter();
 
   for (var tableName in files) {
-    // CSVファイルを読み込み
-    // final input = File("assets/$tableName.csv").openRead();
-    // final fields = await input
-    //     .transform(utf8.decoder)
-    //     .transform(const CsvToListConverter())
-    //     .toList();
-
-    final input = await rootBundle.loadString("assets/$tableName.csv");
+    final input =
+        await rootBundle.loadString("assets/ラテン語シート - $tableName.csv");
     final fields = csvToListConverter.convert(input);
 
-    // 最初の行はカラム名
-    // final columnNames = fields.first;
     final List<String> columnNames = List<String>.from(fields.first);
 
+    // 行頭はSkip
     final dataRows = fields.skip(1);
-
     // データ一括挿入
     await db.transaction((txn) async {
       final batch = txn.batch();

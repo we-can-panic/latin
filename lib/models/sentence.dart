@@ -1,162 +1,103 @@
-import 'dart:ffi';
+import 'dart:core';
 
-import 'package:latin/models/word.dart';
+import 'package:latin/models/noun.dart';
+import 'package:latin/models/nounComponent.dart';
+import 'package:latin/repositories/database/database.dart';
 
-import "../database/database.dart";
-import 'noun.dart';
-import 'verb.dart';
-import 'meta.dart';
 import 'nounComponent.dart';
 import 'verbComponent.dart';
-
-// 全てのSentenceデータ
-List<Sentence> sentenceData = [];
 
 // --
 
 class Sentence {
+  int id;
   String la;
   String en;
   List<NounComponent> nounComponents;
   List<VerbComponent> verbComponents;
-  int idx;
-  Meta meta;
 
-  Sentence(
-      {required this.la,
-      required this.en,
-      required this.nounComponents,
-      required this.verbComponents,
-      required this.idx,
-      required this.meta});
+  Sentence({
+    required this.id,
+    required this.la,
+    required this.en,
+    required this.nounComponents,
+    required this.verbComponents,
+  });
 
   // 連想配列からロード
-  factory Sentence.fromJson(Map<String, dynamic> json) {
-    List<NounComponent> nounComponents = json["nounComponents"]
-        .map((row) => NounComponent(
-            noun: row["noun"],
-            conjugateType: row["conjugateType"],
-            num: row["num"]))
-        .toList();
-    List<VerbComponent> verbComponents = json["verbComponents"]
-        .map((row) => VerbComponent(
-            verb: row["verb"],
-            mode: row["mode"],
-            form: row["form"],
-            tense: row["tense"],
-            person: row["person"],
-            num: row["num"]))
-        .toList();
+  factory Sentence.fromJson(
+    Map<String, dynamic> json,
+    List<NounComponent> nounComponents,
+    List<VerbComponent> verbComponents,
+  ) {
     return Sentence(
-      la: json["la"],
-      en: json["en"],
-      nounComponents: nounComponents,
-      verbComponents: verbComponents,
-      idx: json["idx"],
-      meta: json.containsKey("meta")
-          ? Meta.fromJson(json["meta"])
-          : Meta(score: [], tags: []),
+      id: json["id"],
+      la: json["la"]!,
+      en: json["en"]!,
+      nounComponents: [
+        for (var id in json["nounComponents"]!.split(";"))
+          getNounComponentById(int.parse(id), nounComponents)
+      ],
+      verbComponents: [
+        for (var id in json["verbComponents"]!.split(";"))
+          getVerbComponentById(int.parse(id), verbComponents)
+      ],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "la": la,
+      "en": en,
+      "nounComponents": nounComponents.map((n) => n.id).join(","),
+      "verbComponents": verbComponents.map((v) => v.id).join(","),
+    };
   }
 }
 
-Future<void> loadSentenceData() async {
+NounComponent getNounComponentById(int id, List<NounComponent> datas) {
+  for (var n in datas) {
+    if (n.id == id) {
+      return n;
+    }
+  }
+  return defaultNounComponent;
+}
+
+VerbComponent getVerbComponentById(int id, List<VerbComponent> datas) {
+  for (var n in datas) {
+    if (n.id == id) {
+      return n;
+    }
+  }
+  return defaultVerbComponent;
+}
+
+Sentence defaultSentence = Sentence(
+  id: -1,
+  la: "",
+  en: "",
+  nounComponents: List.empty(),
+  verbComponents: List.empty(),
+);
+
+Future<List<Sentence>> loadSentenceData(List<NounComponent> nounComponents,
+    List<VerbComponent> verbComponents) async {
   final dbclient = await db.database;
 
   // 全取得する SQL を実行
   List<Map<String, dynamic>> results = await dbclient.rawQuery('''
   select
-    $sentenceTable.id, $sentenceTable.la, $sentenceTable.en,
-    $sentenceTable.nounComponents, $sentenceTable.verbComponents,
-    $metaTable.score, $metaTable.tags
+    id, la, en, nounComponents, verbComponents
   from $sentenceTable
-    join $metaTable on $metaTable.rowId=$sentenceTable.id
-    where $metaTable.kind = 'sentence';
   ''');
 
-  List<Map<String, dynamic>> nounComponentResults = await dbclient.rawQuery('''
-    select id, nounId, conjugate, number from $nounComponentTable
-  ''');
-  Map<int, NounComponent> nounComponentmap = {
-    for (var row in nounComponentResults)
-      row["id"]: NounComponent(
-        noun: getNounById(row["nounId"]),
-        conjugateType: NounConjugateType.values[row["conjugate"]],
-        num: Numbers.values[row["number"]],
-      )
-  };
-
-  List<Map<String, dynamic>> verbComponentResults = await dbclient.rawQuery('''
-    select id, verbId, mode, form, tense, person, number from $verbComponentTable
-  ''');
-  Map<int, VerbComponent> verbComponentmap = {
-    for (var row in verbComponentResults)
-      row["id"]: VerbComponent(
-        verb: getVerbById(row["verbId"]),
-        mode: Mode.values[row["mode"]],
-        form: Form.values[row["form"]],
-        tense: Tense.values[row["tense"]],
-        person: Person.values[row["person"]],
-        num: Numbers.values[row["number"]],
-      )
-  };
-
-  int stringToIntWithDefault(String str, {int defaultValue = 0}) {
-    try {
-      return int.parse(str);
-    } catch (e) {
-      return defaultValue;
-    }
-  }
-
-  NounComponent getNounComponentWithDefault(int id) {
-    final result = nounComponentmap[id];
-    if (result == null) {
-      return nounComponentmap[0]!;
-    } else {
-      return result;
-    }
-  }
-
-  VerbComponent getVerbComponentWithDefault(int id) {
-    final result = verbComponentmap[id];
-    if (result == null) {
-      return verbComponentmap[0]!;
-    } else {
-      return result;
-    }
-  }
-
-  String getTagDataWithDefault(int id) {
-    final result = tagData[id];
-    if (result == null) {
-      return "";
-    } else {
-      return result;
-    }
-  }
-
-  // 取得した結果から WTR モデルのリストとして作成
-  sentenceData = results.map((row) {
-    return Sentence(
-      idx: row["id"],
-      la: row["la"],
-      en: row["en"],
-      nounComponents: List<String>.from(row["nounComponents"].split(";"))
-          .map((s) => getNounComponentWithDefault(stringToIntWithDefault(s)))
-          .toList(),
-      verbComponents: List<String>.from(row["verbComponents"].split(";"))
-          .map((s) => getVerbComponentWithDefault(stringToIntWithDefault(s)))
-          .toList(),
-      meta: Meta(
-        score: List<String>.from(row["score"].split(";"))
-            .map((s) => stringToIntWithDefault(s))
-            .toList(),
-        tags: List<String>.from(row["tags"].split(";"))
-            // .map((s) => tagData[stringToIntWithDefault(s)]!)
-            .map((s) => getTagDataWithDefault(stringToIntWithDefault(s)))
-            .toList(),
-      ),
-    );
-  }).toList();
+  return results
+      .map((result) => Sentence.fromJson(
+            result,
+            nounComponents,
+            verbComponents,
+          ))
+      .toList();
 }

@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:latin/models/noun.dart';
-import 'package:latin/models/meta.dart';
+import 'package:latin/apps/noun.dart';
 import "components.dart";
-import "word_logic.dart";
+import "../apps/word_logic.dart";
 
 Column wordStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-    ElevatedButton(
-        onPressed: () async {
-          List<String> tmpTagData = List.from(tagData.values);
-          tmpTagData.add("タグなし");
-          currentTagData =
-              await selectItems(context, tmpTagData, currentTagData, "タグ絞り込み");
-        },
-        child: const Text("タグ絞り込み")),
-    const SizedBox(height: 20),
     ElevatedButton(
         onPressed: () async {
           String res = await selectItem(

@@ -1,31 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:latin/models/meta.dart';
 import "components.dart";
-import "sentence_logic.dart";
+import "../apps/sentence_logic.dart";
 
 Column sentenceStartDivision(BuildContext context) {
   return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
     ElevatedButton(
-        onPressed: () async {
-          List<String> tmpTagData = List.from(tagData.values);
-          tmpTagData.add("タグなし");
-          currentTagData =
-              await selectItems(context, tmpTagData, currentTagData, "タグ絞り込み");
-        },
-        child: const Text("タグ絞り込み")),
-    const SizedBox(height: 20),
-    ElevatedButton(
       onPressed: () {
-        bool result = resetCurrentSentenceData();
-        if (!result) {
-          showAlertDialog(context, "エラー!", "条件に合うワードはありません。絞り込みの設定を見直してみてください");
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const SentenceQuestion(title: "文章テスト")),
-          );
-        }
+        resetCurrentSentenceData();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const SentenceQuestion(title: "文章テスト")),
+        );
       },
       style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange,
@@ -133,15 +119,15 @@ class _SentenceQuestionState extends State<SentenceQuestion> {
               onPressed: () {
                 Set<int> selectedNounIds = Set<int>.from(selectedWords
                     .where((w) => w.type == WordType.noun)
-                    .map((w) => candidateNouns[w.idx].noun.idx));
+                    .map((w) => candidateNouns[w.idx].noun.id));
                 Set<int> correctNounIds = Set<int>.from(
-                    sentence.nounComponents.map((w) => w.noun.idx));
+                    sentence.nounComponents.map((w) => w.noun.id));
 
                 Set<int> selectedVerbIds = Set<int>.from(selectedWords
                     .where((w) => w.type == WordType.verb)
-                    .map((w) => candidateVerbs[w.idx].verb.idx));
+                    .map((w) => candidateVerbs[w.idx].verb.id));
                 Set<int> correctVerbIds = Set<int>.from(
-                    sentence.verbComponents.map((w) => w.verb.idx));
+                    sentence.verbComponents.map((w) => w.verb.id));
 
                 if (selectedNounIds.containsAll(correctNounIds) &&
                     correctNounIds.containsAll(selectedNounIds) &&
