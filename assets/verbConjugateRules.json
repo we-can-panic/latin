@@ -1,0 +1,134 @@
+{
+  "vt1": {
+    "indicative": {
+      "active": {
+        "present": {
+          "single": ["o", "s", "t"],
+          "multi": ["mus", "tis", "nt"]
+        },
+        "past": {
+          "single": ["bam", "bas", "bat"],
+          "multi": ["bamus", "batis", "bant"]
+        },
+        "presentPerfect": {
+          "single": ["i", "isti", "it"],
+          "multi": ["imus", "istis", "erunt"]
+        },
+        "pastPerfect": {
+          "single": ["eram", "eras", "erat"],
+          "multi": ["eramus", "eratis", "erant"]
+        }
+      },
+      "passive": {
+        "present": {
+          "single": ["or", "ris", "tur"],
+          "multi": ["mur", "mini", "ntur"]
+        },
+        "past": {
+          "single": ["bar", "baris", "batur"],
+          "multi": ["bamur", "bamini", "bantur"]
+        },
+        "presentPerfect": {
+          "single": ["sum", "es", "est"],
+          "multi": ["sumus", "estis", "sunt"]
+        },
+        "pastPerfect": {
+          "single": ["eram", "eras", "erat"],
+          "multi": ["eramus", "eratis", "erant"]
+        }
+      }
+    },
+    "subjunctive": {
+      "active": {
+        "present": {
+          "single": ["em", "es", "et"],
+          "multi": ["emus", "etis", "ent"]
+        },
+        "past": {
+          "single": ["arem", "ares", "aret"],
+          "multi": ["aremus", "aretis", "arent"]
+        }
+      },
+      "passive": {
+        "present": {
+          "single": ["er", "eris", "etur"],
+          "multi": ["emur", "emini", "entur"]
+        },
+        "past": {
+          "single": ["arer", "areris", "aretur"],
+          "multi": ["aremur", "aremini", "arentur"]
+        }
+      }
+    }
+  },
+  "vt2": {
+    "indicative": {
+      "active": {
+        "present": {
+          "single": ["eo", "es", "et"],
+          "multi": ["emus", "etis", "ent"]
+        },
+        "past": {
+          "single": ["ebam", "ebas", "ebat"],
+          "multi": ["ebamus", "ebatis", "ebant"]
+        },
+        "presentPerfect": {
+          "single": ["i", "isti", "it"],
+          "multi": ["imus", "istis", "erunt"]
+        },
+        "pastPerfect": {
+          "single": ["eram", "eras", "erat"],
+          "multi": ["eramus", "eratis", "erant"]
+        }
+      },
+      "passive": {
+        "present": {
+          "single": ["eor", "eris", "etur"],
+          "multi": ["emur", "emini", "entur"]
+        },
+        "past": {
+          "single": ["ebar", "ebaris", "ebatur"],
+          "multi": ["ebamur", "ebamini", "ebantur"]
+        },
+        "presentPerfect": {
+          "single": ["sum", "es", "est"],
+          "multi": ["sumus", "estis", "sunt"]
+        },
+        "pastPerfect": {
+          "single": ["eram", "eras", "erat"],
+          "multi": ["eramus", "eratis", "erant"]
+        }
+      }
+    }
+  },
+  "vt3": {
+    "indicative": {
+      "active": {
+        "present": {
+          "single": ["o", "is", "it"],
+          "multi": ["imus", "itis", "unt"]
+        }
+      }
+    }
+  },
+  "vt3i": {
+    "indicative": {
+      "active": {
+        "present": {
+          "single": ["io", "is", "it"],
+          "multi": ["imus", "itis", "iunt"]
+        }
+      }
+    }
+  },
+  "vt4": {
+    "indicative": {
+      "active": {
+        "present": {
+          "single": ["io", "is", "it"],
+          "multi": ["imus", "itis", "iunt"]
+        }
+      }
+    }
+  }
+}

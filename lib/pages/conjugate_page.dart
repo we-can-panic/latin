@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:latin/models/enumeration.dart';
 import 'package:latin/models/noun.dart';
 import "package:latin/models/nounComponent.dart";
-import "components.dart";
+import "components/components.dart";
 import "../apps/conjugate_logic.dart";
 import "../apps/noun.dart";
 import "../apps/utils.dart";

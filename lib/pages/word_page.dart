@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:latin/models/noun.dart';
 import 'package:latin/apps/noun.dart';
-import "components.dart";
+import "components/components.dart";
 import "../apps/word_logic.dart";
 
 Column wordStartDivision(BuildContext context) {

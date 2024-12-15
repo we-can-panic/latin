@@ -78,13 +78,10 @@ flutter:
     - assets/ラテン語シート - sentence.csv
     - assets/ラテン語シート - verb.csv
     - assets/ラテン語シート - verbComponent.csv
-  #   - assets/noun.json
-  #   - assets/noun_meta.json
-  #   - assets/verb.json
-  #   - assets/verb_meta.json
-  #   - assets/sentence.json
-  #   - assets/sentence_meta.json
-  #   - assets/tags.json
+    - assets/verbConjugateRules.json
+    # - assets/nounConjugateRules.json
+    - assets/verbIrregularsConjugateRules.json
+    # - assets/nounIrregularsConjugateRules.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

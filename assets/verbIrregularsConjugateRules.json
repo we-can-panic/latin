@@ -1,0 +1,90 @@
+{
+  "esse": {
+    "indicative": {
+      "active": {
+        "present": {
+          "single": ["sum", "es", "est"],
+          "multi": ["sumus", "estis", "sunt"]
+        },
+        "past": {
+          "single": ["eram", "eras", "erat"],
+          "multi": ["eramus", "eratis", "erant"]
+        },
+        "presentPerfect": {
+          "single": ["fui", "fuisti", "fuit"],
+          "multi": ["fuimus", "fuistis", "fuerunt"]
+        },
+        "pastPerfect": {
+          "single": ["fueram", "fueras", "fuerat"],
+          "multi": ["fueramus", "fueratis", "fuerant"]
+        }
+      }
+    }
+  },
+  "ire": {
+    "indicative": {
+      "active": {
+        "present": {
+          "single": ["eo", "is", "it"],
+          "multi": ["imus", "itis", "eunt"]
+        },
+        "past": {
+          "single": ["ibam", "ibas", "ibat"],
+          "multi": ["ibamus", "ibatis", "ibant"]
+        },
+        "presentPerfect": {
+          "single": ["ii", "iisti", "iit"],
+          "multi": ["iimus", "iistis", "ierunt"]
+        },
+        "pastPerfect": {
+          "single": ["ieram", "ieras", "ierat"],
+          "multi": ["ieramus", "ieratis", "ierant"]
+        }
+      }
+    }
+  },
+  "velle": {
+    "indicative": {
+      "active": {
+        "present": {
+          "single": ["volo", "vis", "vult"],
+          "multi": ["volumus", "vultis", "volunt"]
+        },
+        "past": {
+          "single": ["volebam", "volebas", "volebat"],
+          "multi": ["volebamus", "volebatis", "volebant"]
+        },
+        "presentPerfect": {
+          "single": ["volui", "voluisti", "voluit"],
+          "multi": ["voluimus", "voluistis", "voluerunt"]
+        },
+        "pastPerfect": {
+          "single": ["volueram", "volueras", "voluerat"],
+          "multi": ["volueramus", "volueratis", "voluerant"]
+        }
+      }
+    }
+  },
+  "ferre": {
+    "indicative": {
+      "active": {
+        "present": {
+          "single": ["fero", "fers", "fert"],
+          "multi": ["ferimus", "fertis", "ferunt"]
+        },
+        "past": {
+          "single": ["ferebam", "ferebas", "ferebat"],
+          "multi": ["ferebamus", "ferebatis", "ferebant"]
+        },
+        "presentPerfect": {
+          "single": ["tuli", "tulisti", "tulit"],
+          "multi": ["tulimus", "tulistis", "tulerunt"]
+        },
+        "pastPerfect": {
+          "single": ["tuleram", "tuleras", "tulerat"],
+          "multi": ["tuleramus", "tuleratis", "tulerant"]
+        }
+      }
+    }
+  }
+}

@@ -43,6 +43,7 @@ class Noun {
 
   // 単語の活用
   String conjugate(NounCase w, Numbers m) {
+    if (la.isEmpty) return "";
     switch (conjugateType) {
       case NounConjugateType.nt1: // a
         String stem = la.substring(0, la.length - 1);
