@@ -10,6 +10,33 @@
 
 // // 削除確認
 
+import 'package:flutter_test/flutter_test.dart';
+import 'package:latin/repositories/database/database.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() {
+    // Initialize FFI
+    sqfliteFfiInit();
+    // Set the database factory
+    databaseFactory = databaseFactoryFfi;
+  });
+
+  group('DataBase', () {
+    test('DB作成', () async {
+      final dbclient = await db.database;
+      expect(dbclient, isNotNull);
+    });
+
+    test('ロード', () async {
+      final dbclient = await db.database;
+      expect(dbclient, isNotNull);
+    });
+  });
+}
+
 // import 'package:flutter_test/flutter_test.dart';
 // import 'package:latin/models/noun.dart';
 // import 'package:latin/models/nounComponent.dart';

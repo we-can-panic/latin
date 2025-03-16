@@ -3,38 +3,38 @@
     "indicative": {
       "active": {
         "present": {
-          "single": ["o", "s", "t"],
-          "multi": ["mus", "tis", "nt"]
+          "single": ["o", "as", "at"],
+          "multi": ["amus", "atis", "ant"]
         },
         "past": {
-          "single": ["bam", "bas", "bat"],
-          "multi": ["bamus", "batis", "bant"]
+          "single": ["abam", "abas", "abat"],
+          "multi": ["abamus", "abatis", "abant"]
         },
         "presentPerfect": {
-          "single": ["i", "isti", "it"],
-          "multi": ["imus", "istis", "erunt"]
+          "single": ["avi", "avisti", "avit"],
+          "multi": ["avimus", "avistis", "averunt"]
         },
         "pastPerfect": {
-          "single": ["eram", "eras", "erat"],
-          "multi": ["eramus", "eratis", "erant"]
+          "single": ["averam", "averas", "averat"],
+          "multi": ["averamus", "averatis", "averant"]
         }
       },
       "passive": {
         "present": {
-          "single": ["or", "ris", "tur"],
-          "multi": ["mur", "mini", "ntur"]
+          "single": ["or", "aris", "atur"],
+          "multi": ["amur", "amini", "antur"]
         },
         "past": {
-          "single": ["bar", "baris", "batur"],
-          "multi": ["bamur", "bamini", "bantur"]
+          "single": ["abar", "abaris", "abatur"],
+          "multi": ["abamur", "abamini", "abantur"]
         },
         "presentPerfect": {
-          "single": ["sum", "es", "est"],
-          "multi": ["sumus", "estis", "sunt"]
+          "single": ["atus sum", "atus es", "atus est"],
+          "multi": ["ati sumus", "ati estis", "ati sunt"]
         },
         "pastPerfect": {
-          "single": ["eram", "eras", "erat"],
-          "multi": ["eramus", "eratis", "erant"]
+          "single": ["atus eram", "atus eras", "atus erat"],
+          "multi": ["ati eramus", "ati eratis", "ati erant"]
         }
       }
     },
@@ -73,12 +73,12 @@
           "multi": ["ebamus", "ebatis", "ebant"]
         },
         "presentPerfect": {
-          "single": ["i", "isti", "it"],
-          "multi": ["imus", "istis", "erunt"]
+          "single": ["ui", "uisti", "uit"],
+          "multi": ["uimus", "uistis", "uerunt"]
         },
         "pastPerfect": {
-          "single": ["eram", "eras", "erat"],
-          "multi": ["eramus", "eratis", "erant"]
+          "single": ["ueram", "ueras", "uerat"],
+          "multi": ["ueramus", "ueratis", "uerant"]
         }
       },
       "passive": {
@@ -91,12 +91,34 @@
           "multi": ["ebamur", "ebamini", "ebantur"]
         },
         "presentPerfect": {
-          "single": ["sum", "es", "est"],
-          "multi": ["sumus", "estis", "sunt"]
+          "single": ["itus sum", "itus es", "itus est"],
+          "multi": ["iti sumus", "iti estis", "iti sunt"]
         },
         "pastPerfect": {
-          "single": ["eram", "eras", "erat"],
-          "multi": ["eramus", "eratis", "erant"]
+          "single": ["itus eram", "itus eras", "itus erat"],
+          "multi": ["iti eramus", "iti eratis", "iti erant"]
+        }
+      }
+    },
+    "subjunctive": {
+      "active": {
+        "present": {
+          "single": ["eam", "eas", "eat"],
+          "multi": ["eamus", "eatis", "eant"]
+        },
+        "past": {
+          "single": ["erem", "eres", "eret"],
+          "multi": ["eremus", "eretis", "erent"]
+        }
+      },
+      "passive": {
+        "present": {
+          "single": ["ear", "earis", "eatur"],
+          "multi": ["eamur", "eamini", "eantur"]
+        },
+        "past": {
+          "single": ["erer", "ereris", "eretur"],
+          "multi": ["eremur", "eremini", "erentur"]
         }
       }
     }
@@ -107,6 +129,58 @@
         "present": {
           "single": ["o", "is", "it"],
           "multi": ["imus", "itis", "unt"]
+        },
+        "past": {
+          "single": ["ebam", "ebas", "ebat"],
+          "multi": ["ebamus", "ebatis", "ebant"]
+        },
+        "presentPerfect": {
+          "single": ["i", "isti", "it"],
+          "multi": ["imus", "istis", "erunt"]
+        },
+        "pastPerfect": {
+          "single": ["eram", "eras", "erat"],
+          "multi": ["eramus", "eratis", "erant"]
+        }
+      },
+      "passive": {
+        "present": {
+          "single": ["or", "eris", "itur"],
+          "multi": ["imur", "imini", "untur"]
+        },
+        "past": {
+          "single": ["ebar", "ebaris", "ebatur"],
+          "multi": ["ebamur", "ebamini", "ebantur"]
+        },
+        "presentPerfect": {
+          "single": ["tus sum", "tus es", "tus est"],
+          "multi": ["ti sumus", "ti estis", "ti sunt"]
+        },
+        "pastPerfect": {
+          "single": ["tus eram", "tus eras", "tus erat"],
+          "multi": ["ti eramus", "ti eratis", "ti erant"]
+        }
+      }
+    },
+    "subjunctive": {
+      "active": {
+        "present": {
+          "single": ["am", "as", "at"],
+          "multi": ["amus", "atis", "ant"]
+        },
+        "past": {
+          "single": ["erem", "eres", "eret"],
+          "multi": ["eremus", "eretis", "erent"]
+        }
+      },
+      "passive": {
+        "present": {
+          "single": ["ar", "aris", "atur"],
+          "multi": ["amur", "amini", "antur"]
+        },
+        "past": {
+          "single": ["erer", "ereris", "eretur"],
+          "multi": ["eremur", "eremini", "erentur"]
         }
       }
     }
@@ -117,6 +191,58 @@
         "present": {
           "single": ["io", "is", "it"],
           "multi": ["imus", "itis", "iunt"]
+        },
+        "past": {
+          "single": ["iebam", "iebas", "iebat"],
+          "multi": ["iebamus", "iebatis", "iebant"]
+        },
+        "presentPerfect": {
+          "single": ["i", "isti", "it"],
+          "multi": ["imus", "istis", "erunt"]
+        },
+        "pastPerfect": {
+          "single": ["eram", "eras", "erat"],
+          "multi": ["eramus", "eratis", "erant"]
+        }
+      },
+      "passive": {
+        "present": {
+          "single": ["ior", "eris", "itur"],
+          "multi": ["imur", "imini", "iuntur"]
+        },
+        "past": {
+          "single": ["iebar", "iebaris", "iebatur"],
+          "multi": ["iebamur", "iebamini", "iebantur"]
+        },
+        "presentPerfect": {
+          "single": ["tus sum", "tus es", "tus est"],
+          "multi": ["ti sumus", "ti estis", "ti sunt"]
+        },
+        "pastPerfect": {
+          "single": ["tus eram", "tus eras", "tus erat"],
+          "multi": ["ti eramus", "ti eratis", "ti erant"]
+        }
+      }
+    },
+    "subjunctive": {
+      "active": {
+        "present": {
+          "single": ["iam", "ias", "iat"],
+          "multi": ["iamus", "iatis", "iant"]
+        },
+        "past": {
+          "single": ["erem", "eres", "eret"],
+          "multi": ["eremus", "eretis", "erent"]
+        }
+      },
+      "passive": {
+        "present": {
+          "single": ["iar", "iaris", "iatur"],
+          "multi": ["iamur", "iamini", "iantur"]
+        },
+        "past": {
+          "single": ["erer", "ereris", "eretur"],
+          "multi": ["eremur", "eremini", "erentur"]
         }
       }
     }
@@ -127,6 +253,58 @@
         "present": {
           "single": ["io", "is", "it"],
           "multi": ["imus", "itis", "iunt"]
+        },
+        "past": {
+          "single": ["iebam", "iebas", "iebat"],
+          "multi": ["iebamus", "iebatis", "iebant"]
+        },
+        "presentPerfect": {
+          "single": ["ivi", "ivisti", "ivit"],
+          "multi": ["ivimus", "ivistis", "iverunt"]
+        },
+        "pastPerfect": {
+          "single": ["iveram", "iveras", "iverat"],
+          "multi": ["iveramus", "iveratis", "iverant"]
+        }
+      },
+      "passive": {
+        "present": {
+          "single": ["ior", "iris", "itur"],
+          "multi": ["imur", "imini", "iuntur"]
+        },
+        "past": {
+          "single": ["iebar", "iebaris", "iebatur"],
+          "multi": ["iebamur", "iebamini", "iebantur"]
+        },
+        "presentPerfect": {
+          "single": ["itus sum", "itus es", "itus est"],
+          "multi": ["iti sumus", "iti estis", "iti sunt"]
+        },
+        "pastPerfect": {
+          "single": ["itus eram", "itus eras", "itus erat"],
+          "multi": ["iti eramus", "iti eratis", "iti erant"]
+        }
+      }
+    },
+    "subjunctive": {
+      "active": {
+        "present": {
+          "single": ["iam", "ias", "iat"],
+          "multi": ["iamus", "iatis", "iant"]
+        },
+        "past": {
+          "single": ["irem", "ires", "iret"],
+          "multi": ["iremus", "iretis", "irent"]
+        }
+      },
+      "passive": {
+        "present": {
+          "single": ["iar", "iaris", "iatur"],
+          "multi": ["iamur", "iamini", "iantur"]
+        },
+        "past": {
+          "single": ["irer", "ireris", "iretur"],
+          "multi": ["iremur", "iremini", "irentur"]
         }
       }
     }

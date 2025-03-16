@@ -44,7 +44,7 @@ class VerbComponent {
     return {
       "id": id,
       "verbId": verb.id,
-      "mode ": mode.index,
+      "mode": mode.index,
       "form": form.index,
       "tense": tense.index,
       "person": person.index,
