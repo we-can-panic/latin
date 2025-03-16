@@ -16,36 +16,68 @@ void showWordTable(BuildContext context, Offset position, NounOrVerb word,
   OverlayState overlayState = Overlay.of(context);
   OverlayEntry? overlayEntry;
 
+  // 画面サイズを取得
+  final screenSize = MediaQuery.of(context).size;
+
+  // ポップアップのサイズ
+  const popupWidth = 300.0;
+  const popupHeight = 250.0;
+
+  // X座標の調整（左右の境界チェック）
+  double adjustedX = position.dx - 100;
+  if (adjustedX < 0) {
+    adjustedX = 10; // 左端に余白を設ける
+  } else if (adjustedX + popupWidth > screenSize.width) {
+    adjustedX = screenSize.width - popupWidth - 10; // 右端に余白を設ける
+  }
+
+  // Y座標の調整（下端の境界チェック）
+  double adjustedY = position.dy;
+  if (adjustedY + popupHeight > screenSize.height) {
+    adjustedY = screenSize.height - popupHeight - 10; // 下端に余白を設ける
+  }
+
   overlayEntry = OverlayEntry(
     builder: (context) {
       return Positioned(
-        top: position.dy,
-        left: position.dx - 100,
+        top: adjustedY,
+        left: adjustedX,
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
             CustomPaint(
-              size: const Size(300, 250),
+              size: const Size(popupWidth, popupHeight),
               painter: PentagonPainter(),
             ),
-            Column(
-              children: [
-                if (word.type == WordType.verb)
-                  ElevatedButton(
-                    onPressed: () => _showModeFormTenseSelection(context),
-                    child: const Text('変更'),
+            Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  if (word.type == WordType.verb)
+                    ElevatedButton(
+                      onPressed: () async {
+                        overlayEntry?.remove(); // 一時的にポップアップを非表示
+                        await _showModeFormTenseSelection(context);
+                        overlayState.insert(overlayEntry!); // ポップアップを再表示
+                      },
+                      child: const Text('変更'),
+                    ),
+                  const SizedBox(height: 10),
+                  Table(
+                    columnWidths: const {
+                      0: FixedColumnWidth(50), // 一列目の幅を50に
+                      1: FixedColumnWidth(80), // 二列目の幅は80のまま
+                      2: FixedColumnWidth(80), // 三列目の幅は80のまま
+                    },
+                    border: TableBorder.all(),
+                    children: [
+                      _generateHeaderRow(["", "Single", "Multi"]),
+                      ..._generateConjugateRows(
+                          overlayEntry!, word, assignFunction),
+                    ],
                   ),
-                const SizedBox(height: 10),
-                Table(
-                  defaultColumnWidth: const FixedColumnWidth(80),
-                  border: TableBorder.all(),
-                  children: [
-                    _generateHeaderRow(["", "Single", "Multi"]),
-                    ..._generateConjugateRows(
-                        overlayEntry!, word, assignFunction),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -145,8 +177,8 @@ Widget _generateText(String txt) {
   );
 }
 
-void _showModeFormTenseSelection(BuildContext context) {
-  showDialog(
+Future<void> _showModeFormTenseSelection(BuildContext context) async {
+  await showDialog(
     context: context,
     builder: (context) {
       latType.Mode tempMode = _mode;
@@ -220,7 +252,7 @@ class PentagonPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey.shade300
+      ..color = Colors.white // 背景色を白に変更
       ..style = PaintingStyle.fill;
 
     final path = Path();
